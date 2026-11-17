@@ -1,1 +1,4 @@
-{ "version": "0.0.1", "configurations": [ { "name": "yalla", "runtimeExecutable": "python", "runtimeArgs": ["-m", "http.server", "8767"], "port": 8767 } ] }
+{ "version": "0.0.1", "configurations": [
+  { "name": "app", "runtimeExecutable": "python", "runtimeArgs": ["-m", "http.server", "8765"], "port": 8765 },
+  { "name": "apps-new", "runtimeExecutable": "python", "runtimeArgs": ["-m", "http.server", "8768", "-d", "C:/Users/nasse/language-apps"], "port": 8768 }
+] }

@@ -1,10 +1,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Yalla! Spoken Arabic</title>
-<meta name="description" content="Learn to speak Levantine Arabic with pictures and sound. No alphabet needed.">
+<title>Yalla! Levantine Arabic</title>
+<meta name="description" content="Learn to speak, read and write Levantine Arabic with pictures and sound.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Baloo+Bhaijaan+2:wght@500;700;800&display=swap">
 <style>
 /* Layout: one-screen phrase app over a warm evening landscape (sky, drifting clouds, olive hills,
    a tappable sun and a cat). Deliberately single-theme, colors set explicitly. */
@@ -23,6 +23,7 @@
   --sea: #2E7DD7;
   --shadow: 0 6px 0 rgba(58,36,22,.14);
   --display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --arabic: "Baloo Bhaijaan 2", "Noto Naskh Arabic", "Geeza Pro", "Segoe UI", sans-serif;
   color-scheme: light;
 }
 html, body { height: 100%; }
@@ -199,6 +200,30 @@ img { -webkit-user-drag: none; }
 .btn.no { background: #FFE1DC; }
 @keyframes popin { from { transform: scale(.4); opacity: 0; } }
 
+/* Arabic writing */
+.ar { font-family: var(--arabic); direction: rtl; unicode-bidi: isolate; font-weight: 700; line-height: 1.5; }
+.big .ar { font-size: clamp(1.6rem, 6vw, 2.4rem); color: var(--sea); }
+.ask .ar { font-size: 1.5rem; color: var(--sea); }
+.next-btn { align-self: center; padding: 14px 36px; font-size: 1.4rem; }
+.next-btn img { width: 40px; height: 40px; }
+.mode.write { background: #8A5CD0; }
+.glyph { font-family: var(--arabic); font-weight: 700; font-size: clamp(5rem, 22vw, 8rem); line-height: 1.2; color: var(--ink); direction: rtl; }
+.opt .glyph { font-size: clamp(3.4rem, 15vw, 5rem); }
+.tile .glyph { font-size: 3.4rem; line-height: 84px; height: 84px; }
+.row h2 .glyph { font-size: 1.8rem; line-height: 48px; height: 48px; text-shadow: none; }
+.forms { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; direction: rtl; }
+.forms span { font-family: var(--arabic); font-size: 1.7rem; font-weight: 700; padding: 0 12px; border-radius: 14px; background: #F6EBDD; line-height: 1.6; }
+.forms small { display: block; font-family: var(--display); font-size: .7rem; color: var(--ink-soft); line-height: 1; padding-bottom: 6px; text-align: center; direction: ltr; }
+.slot { min-height: 84px; width: 100%; box-sizing: border-box; border-radius: 22px; border: 4px dashed #E4D3BE; display: grid; place-items: center; padding: 6px 12px; }
+.slot .ar { font-size: clamp(2.2rem, 9vw, 3.2rem); color: var(--ink); }
+.slot.done { border-style: solid; border-color: var(--leaf); background: #E3FAEE; }
+.letters { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; direction: rtl; }
+.letters button { width: 64px; height: 70px; border-radius: 18px; background: var(--card); box-shadow: var(--shadow); font-family: var(--arabic); font-size: 2.2rem; font-weight: 700; line-height: 1; }
+.letters button.used { visibility: hidden; }
+.letters button.wrong { animation: wiggle .45s; background: #FFE1DC; }
+.letters button.sp { font-family: var(--display); font-size: .9rem; width: 80px; }
+.write-card { min-height: 0; gap: 10px; padding: 18px 14px; }
+.write-card .pic img.main { width: clamp(90px, 26vw, 140px); }
 .win { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; }
 .win .trophy { width: 170px; height: 170px; animation: hop 1s ease-in-out infinite alternate; }
 .win h2 { margin: 0; font-size: 3rem; font-weight: 800; line-height: 1; }
@@ -294,8 +319,11 @@ body.flash .app { animation: flashy .6s ease-out; }
     <label>Show the spelling in the listening game
       <span class="seg" id="spellSeg"><button type="button" data-v="1">Show</button><button type="button" data-v="0">Hide</button></span>
     </label>
-    <p>This is spoken Levantine Arabic (Lebanon, Syria, Palestine, Jordan), not the formal written kind. The spelling under each picture is just to help you remember: ' is a little catch in the throat, kh is like a French r, and gh is a softer gargle. Always copy the sound, not the letters. Phrases are said as a man would say them, to a man.</p>
-    <p>Each topic has three ways to practise: <b>look</b> (go through the phrases), <b>listen</b> (hear one, tap its picture) and <b>say it</b> (see the meaning, say it out loud, then check). The app keeps track of what you know: it never asks the same thing twice in a row, and mistakes come back a few questions later.</p>
+    <label>Show the Arabic writing
+      <span class="seg" id="arSeg"><button type="button" data-v="1">Show</button><button type="button" data-v="0">Hide</button></span>
+    </label>
+    <p>This is spoken Levantine Arabic (Lebanon, Syria, Palestine, Jordan), not the formal kind. The English-letter spelling is just to help you remember: ' is a little catch in the throat, kh is like a French r, and gh is a softer gargle. Always copy the sound. Phrases are said as a man would say them, to a man.</p>
+    <p>Each topic has four ways to practise: <b>look</b> (go through the phrases), <b>listen</b> (hear one, tap its picture), <b>say it</b> (see the meaning, say it out loud, then check) and <b>write it</b> (build the word letter by letter). Start with the <b>Alphabet</b> topic if you want to read and write. Spoken Arabic has no official spelling, so the writing follows the usual way people text it. The app keeps track of what you know: it never asks the same thing twice in a row, and mistakes come back a few questions later.</p>
     <button type="button" class="linkbtn" id="resetBtn">Reset my progress</button>
   </section>
 
@@ -970,6 +998,181 @@ body.flash .app { animation: flashy .6s ease-out; }
     "10"
    ]
   ]
+ },
+ {
+  "id": "abc",
+  "en": "Alphabet",
+  "type": "letter",
+  "items": [
+   [
+    "أَلِف",
+    "alif",
+    "a / aa",
+    "ا"
+   ],
+   [
+    "باء",
+    "ba",
+    "b",
+    "ب"
+   ],
+   [
+    "تاء",
+    "ta",
+    "t",
+    "ت"
+   ],
+   [
+    "ثاء",
+    "tha",
+    "th as in think",
+    "ث"
+   ],
+   [
+    "جيم",
+    "jeem",
+    "j",
+    "ج"
+   ],
+   [
+    "حاء",
+    "ha",
+    "a strong, breathy h",
+    "ح"
+   ],
+   [
+    "خاء",
+    "kha",
+    "kh, like a French r",
+    "خ"
+   ],
+   [
+    "دال",
+    "dal",
+    "d",
+    "د"
+   ],
+   [
+    "ذال",
+    "thal",
+    "th as in this",
+    "ذ"
+   ],
+   [
+    "راء",
+    "ra",
+    "a rolled r",
+    "ر"
+   ],
+   [
+    "زاي",
+    "zay",
+    "z",
+    "ز"
+   ],
+   [
+    "سين",
+    "seen",
+    "s",
+    "س"
+   ],
+   [
+    "شين",
+    "sheen",
+    "sh",
+    "ش"
+   ],
+   [
+    "صاد",
+    "sad",
+    "a heavy s",
+    "ص"
+   ],
+   [
+    "ضاد",
+    "dad",
+    "a heavy d",
+    "ض"
+   ],
+   [
+    "طاء",
+    "ta",
+    "a heavy t",
+    "ط"
+   ],
+   [
+    "ظاء",
+    "za",
+    "a heavy z",
+    "ظ"
+   ],
+   [
+    "عَين",
+    "'ayn",
+    "' a catch deep in the throat",
+    "ع"
+   ],
+   [
+    "غَين",
+    "ghayn",
+    "gh, a soft gargle",
+    "غ"
+   ],
+   [
+    "فاء",
+    "fa",
+    "f",
+    "ف"
+   ],
+   [
+    "قاف",
+    "qaf",
+    "q (in speech often just ')",
+    "ق"
+   ],
+   [
+    "كاف",
+    "kaf",
+    "k",
+    "ك"
+   ],
+   [
+    "لام",
+    "lam",
+    "l",
+    "ل"
+   ],
+   [
+    "ميم",
+    "meem",
+    "m",
+    "م"
+   ],
+   [
+    "نون",
+    "noon",
+    "n",
+    "ن"
+   ],
+   [
+    "هاء",
+    "ha",
+    "h",
+    "ه"
+   ],
+   [
+    "واو",
+    "waw",
+    "w / oo",
+    "و"
+   ],
+   [
+    "ياء",
+    "ya",
+    "y / ee",
+    "ي"
+   ]
+  ]
  }
 ]/*END*/;
   // "Mix it up": every phrase (not numbers) together
@@ -981,12 +1184,26 @@ body.flash .app { animation: flashy .6s ease-out; }
   const src = n => "img/" + slug(n) + ".png";
   const img = (n, cls) => '<img src="' + src(n) + '" alt=""' + (cls ? ' class="' + cls + '"' : "") + ' draggable="false">';
 
+  // ---------- Writing ----------
+  // item[0] is spelled to make the voice sound right; a few are written differently in real life.
+  const WRITTEN = {
+    "أَدّيش عُمْرَك؟": "قديش عمرك", "أَدّيش حَأّو؟": "قديش حقه", "عَشْمال": "عالشمال", "عَ اليَمين": "عاليمين",
+    "يَلّا، بايْ": "يلا باي", "إِيهْ!": "ايه", "أَنا اسْمي": "انا اسمي", "أَنا إِسْمي": "انا اسمي", "شُو إِسْمَك؟": "شو اسمك"
+  };
+  const HARAKAT = /[ً-ْٰـ]/g;
+  // the everyday written form: no vowel marks, no punctuation
+  const written = it => (WRITTEN[it[0]] || it[0]).replace(HARAKAT, "").replace(/[؟?!،,.…]/g, "").replace(/\s+/g, " ").trim();
+  const canWrite = it => written(it).length <= 9;
+  const writable = c => c.type !== "letter" && c.items.filter(canWrite).length >= 4;
+  const arHTML = (c, it) => prefs.ar && c.type !== "letter" ? '<span class="ar" lang="ar">' + esc(written(it)) + "</span>" : "";
+  const ABC = "ابتثجحخدذرزسشصضطظعغفقكلمنهوي".split("");
+
   // ---------- Prefs (per device) ----------
   const store = {
     get(k, d) { try { const v = localStorage.getItem("ya_" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
     set(k, v) { try { localStorage.setItem("ya_" + k, JSON.stringify(v)); } catch (e) {} }
   };
-  const prefs = { speed: store.get("speed", 1), opts: store.get("opts", 3), spell: store.get("spell", 0), stars: store.get("stars", 0) };
+  const prefs = { speed: store.get("speed", 1), opts: store.get("opts", 3), spell: store.get("spell", 0), ar: store.get("ar", 1), stars: store.get("stars", 0) };
 
   // ---------- Voice: recorded clips, device voice only as a fallback ----------
   const clips = {};
@@ -1067,9 +1284,16 @@ body.flash .app { animation: flashy .6s ease-out; }
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
   const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const pick = a => a[Math.floor(Math.random() * a.length)];
-  const coverImg = c => c.type === "number" ? '<span class="cvnum">123</span>' : img(c.cover);
+  const coverImg = c => c.type === "number" ? '<span class="cvnum">123</span>' : c.type === "letter" ? '<span class="glyph">أ ب</span>' : img(c.cover);
   const picKey = it => it[3];
+  // the shapes a letter takes alone, at the start, in the middle and at the end of a word
+  function formsHTML(L) {
+    const T = "ـ", solo = "اأدذرزو".includes(L);
+    const f = solo ? [["alone", L], ["end", T + L]] : [["alone", L], ["start", L + T], ["middle", T + L + T], ["end", T + L]];
+    return '<span class="forms">' + f.map(([n, s]) => "<span>" + s + "<small>" + n + "</small></span>").join("") + "</span>";
+  }
   function picHTML(cat, item) {
+    if (cat.type === "letter") return '<span class="glyph" lang="ar">' + item[3] + "</span>";
     if (cat.type === "number") {
       const n = +item[3];
       return '<span class="num"><span class="digit">' + n + '</span><span class="apples">' + Array.from({ length: n }, () => img("Red apple")).join("") + "</span></span>";
@@ -1136,10 +1360,11 @@ body.flash .app { animation: flashy .6s ease-out; }
   let stats = store.get("st", {});
   let clock = store.get("clock", 0), recent = store.get("recent", []);
   const sk = (t, mode) => mode + ":" + t;
-  function pickTarget(cat, g) {
-    let best = 0, bs = -Infinity;
+  function pickTarget(cat, g, ok) {
+    let best = ok ? Math.max(0, cat.items.findIndex(ok)) : 0, bs = -Infinity;
     const block = Math.min(2, cat.items.length - 1);
     cat.items.forEach((it, i) => {
+      if (ok && !ok(it)) return;
       const t = it[0], s = stats[sk(t, g.mode)] || { b: 0, due: 0, n: 0 }, asked = g.asked[t] || 0;
       let sc = (clock - s.due) * 6 - s.b * 4;
       if (!s.n) sc += 25;
@@ -1160,19 +1385,20 @@ body.flash .app { animation: flashy .6s ease-out; }
     recent = [t].concat(recent.filter(x => x !== t)).slice(0, 4);
     store.set("st", stats); store.set("clock", clock); store.set("recent", recent);
   }
-  // how much of a topic you know (box 2+ in listening or speaking), for the little bar on each tile
+  // how much of a topic you know (box 2+ in any mode), for the little bar on each tile
   function known(c) {
-    const ok = c.items.filter(it => ["hear", "say"].some(m => (stats[sk(it[0], m)] || {}).b >= 2)).length;
+    const ok = c.items.filter(it => ["hear", "say", "write"].some(m => (stats[sk(it[0], m)] || {}).b >= 2)).length;
     return Math.round(100 * ok / c.items.length);
   }
 
   // ---------- Screens ----------
   let state = { view: "home" };
   function go(view, extra) { state = Object.assign({ view }, extra || {}); render(); window.scrollTo(0, 0); }
-  function render() { ({ home: renderHome, cat: renderCat, learn: renderLearn, game: renderGame, speak: renderSpeak, win: renderWin })[state.view](); }
+  function render() { ({ home: renderHome, cat: renderCat, learn: renderLearn, game: renderGame, speak: renderSpeak, write: renderWrite, win: renderWin })[state.view](); }
   const stars = n => Array.from({ length: n.total }, (_, i) => '<img src="' + src("Star") + '" alt="" class="' + (i < n.score ? "on" : "") + '">').join("");
   const header = c => '<div class="row"><button type="button" class="back" id="back" aria-label="Back">←</button><h2 class="ol">' + coverImg(c) + esc(c.en) + "</h2></div>";
   const isMix = i => CATS[i].id === ALL_ID;
+  const nextBtn = () => '<button type="button" class="btn go next-btn" id="nextBtn">Next ' + "▶</button>";
 
   function renderHome() {
     $screen.innerHTML =
@@ -1190,10 +1416,12 @@ body.flash .app { animation: flashy .6s ease-out; }
       '<div class="modes">' +
       (isMix(state.cat) ? "" : '<button type="button" class="mode look" id="look">' + img("Eyes") + "<b>Look</b></button>") +
       '<button type="button" class="mode play" id="play">' + img("Speaker high volume") + "<b>Listen</b></button>" +
-      '<button type="button" class="mode speak" id="speak">' + img("Speaking head") + "<b>Say it</b></button></div>";
+      '<button type="button" class="mode speak" id="speak">' + img("Speaking head") + "<b>Say it</b></button>" +
+      (writable(c) ? '<button type="button" class="mode write" id="write">' + img("Writing hand") + "<b>Write it</b></button>" : "") + "</div>";
     document.getElementById("back").onclick = () => go("home");
-    const look = document.getElementById("look");
+    const look = document.getElementById("look"), write = document.getElementById("write");
     if (look) look.onclick = () => { sfx("whoosh"); go("learn", { cat: state.cat, idx: 0 }); sayCurrent(); };
+    if (write) write.onclick = () => { sfx("drum"); startWrite(state.cat); };
     document.getElementById("play").onclick = () => { sfx("drum"); startGame(state.cat); };
     document.getElementById("speak").onclick = () => { sfx("drum"); startSpeak(state.cat); };
   }
@@ -1206,7 +1434,8 @@ body.flash .app { animation: flashy .6s ease-out; }
       '<div class="learn">' +
       '<button type="button" class="arrow" id="prev" aria-label="Previous"' + (state.idx === 0 ? " disabled" : "") + ">◀</button>" +
       '<button type="button" class="big" id="card" aria-label="' + esc(item[1] + " – " + item[2]) + '"><span class="pic">' + picHTML(c, item) + "</span>" +
-      '<span class="tr">' + esc(item[1]) + '</span><span class="en">' + esc(item[2]) + "</span>" +
+      '<span class="tr">' + esc(item[1]) + "</span>" + arHTML(c, item) + '<span class="en">' + esc((c.type === "letter" ? "sounds like " : "") + item[2]) + "</span>" +
+      (c.type === "letter" ? formsHTML(item[3]) : "") +
       '<span class="hint">' + img("Speaker high volume") + "</span></button>" +
       '<button type="button" class="arrow" id="next" aria-label="Next">' + (state.idx === n - 1 ? img("Video game") : "▶") + "</button></div>" +
       '<div class="dots">' + c.items.map((_, i) => '<i class="' + (i === state.idx ? "on" : "") + '"></i>').join("") + "</div>";
@@ -1220,6 +1449,22 @@ body.flash .app { animation: flashy .6s ease-out; }
     };
   }
 
+  function nextOrWin(again) {
+    state.r++;
+    if (state.r >= state.total) {
+      const pending = Object.keys(state.wrong).some(w => !state.fixed[w]);
+      if (pending && state.extra < 2) { state.extra++; state.total++; return again(); }
+      addStars(state.score); go("win", { cat: state.cat, score: state.score, from: state.view });
+    } else again();
+  }
+  // after a right answer: stay on it, replay as much as you like, then tap Next
+  function showNext(again) {
+    const b = document.createElement("div"); b.style.display = "contents"; b.innerHTML = nextBtn();
+    $screen.appendChild(b);
+    const nb = document.getElementById("nextBtn");
+    nb.onclick = () => { nb.disabled = true; sfx("whoosh"); nextOrWin(again); };
+  }
+
   // ----- Listen: hear a phrase, tap its picture -----
   function startGame(ci) {
     state = { view: "game", mode: "hear", cat: ci, total: ROUNDS, r: 0, score: 0, extra: 0, locked: false, asked: {}, wrong: {}, fixed: {} };
@@ -1229,7 +1474,7 @@ body.flash .app { animation: flashy .6s ease-out; }
   function setupRound() {
     const c = CATS[state.cat];
     const target = state.target = pickTarget(c, state);
-    state.firstTry = true;
+    state.firstTry = true; state.answered = false;
     const key = i => picKey(c.items[i]);
     const want = state.wrong[c.items[target][0]] ? 2 : Math.min(prefs.opts, c.items.length);
     const others = [];
@@ -1254,36 +1499,31 @@ body.flash .app { animation: flashy .6s ease-out; }
       '<div class="q">' + (prefs.spell ? esc(item[1]) : "") + "</div>" +
       '<div class="progress" aria-label="Stars">' + stars(state) + "</div></div>" +
       '<div class="opts">' +
-      state.options.map(i => '<button type="button" class="opt" data-i="' + i + '">' + picHTML(c, c.items[i]) + '<span class="en">' + esc(c.items[i][2]) + "</span></button>").join("") +
+      state.options.map(i => '<button type="button" class="opt" data-i="' + i + '">' + picHTML(c, c.items[i]) +
+        (c.type === "letter" ? "" : '<span class="en">' + esc(c.items[i][2]) + "</span>") + "</button>").join("") +
       "</div>";
     document.getElementById("back").onclick = () => go("cat", { cat: state.cat });
     document.getElementById("speaker").onclick = () => askNow();
     $screen.querySelectorAll(".opt").forEach(b => b.onclick = () => choose(b));
   }
-  function nextOrWin(again) {
-    state.r++;
-    if (state.r >= state.total) {
-      const pending = Object.keys(state.wrong).some(w => !state.fixed[w]);
-      if (pending && state.extra < 2) { state.extra++; state.total++; return again(); }
-      addStars(state.score); go("win", { cat: state.cat, score: state.score, from: state.view });
-    } else again();
-  }
-  async function choose(btn) {
+  function choose(btn) {
+    const c = CATS[state.cat], target = state.target, i = +btn.dataset.i, item = c.items[target], t = item[0];
+    if (state.answered) { if (i === target) { bounce(btn); say(t); } return; }   // tap the right picture again to hear it again
     if (state.locked) return;
-    const c = CATS[state.cat], target = state.target, i = +btn.dataset.i, t = c.items[target][0];
     if (i === target) {
-      state.locked = true;
+      state.locked = true; state.answered = true;
       btn.classList.add("right"); sfx("yay");
       $screen.querySelectorAll(".opt").forEach(b => { if (b !== btn) b.classList.add("fade"); });
-      const q = $screen.querySelector(".ask .q"); if (q) q.textContent = c.items[target][1];   // show the spelling once you got it
+      const q = $screen.querySelector(".ask .q");   // show the spelling (and writing) once you got it
+      if (q) q.innerHTML = esc(item[1]) + (c.type === "letter" ? "" : " " + arHTML(c, item));
       record(t, "hear", state.firstTry);
       if (state.wrong[t] && state.firstTry) state.fixed[t] = true;
       state.asked[t] = (state.asked[t] || 0) + 1;
       state.score = Math.min(state.score + 1, state.total);
       const prog = $screen.querySelectorAll(".progress img"); if (prog[state.score - 1]) prog[state.score - 1].classList.add("on");
       party(btn);
-      await say(t);
-      setTimeout(() => { if (state.view === "game") nextOrWin(setupRound); }, 600);
+      say(t);
+      showNext(setupRound);
     } else {
       state.locked = true;
       if (state.firstTry) { state.firstTry = false; state.wrong[t] = true; }
@@ -1308,10 +1548,10 @@ body.flash .app { animation: flashy .6s ease-out; }
   function renderSpeak() {
     const c = CATS[state.cat], item = c.items[state.target];
     $screen.innerHTML = header(c) +
-      '<div class="ask"><div class="q">How do you say…</div><div class="progress" aria-label="Stars">' + stars(state) + "</div></div>" +
+      '<div class="ask"><div class="q">' + (c.type === "letter" ? "What is this letter called?" : "How do you say…") + '</div><div class="progress" aria-label="Stars">' + stars(state) + "</div></div>" +
       '<div class="big speak-card"><span class="pic">' + picHTML(c, item) + "</span>" +
-      '<span class="big-en">' + esc(item[2]) + "</span>" +
-      (state.revealed ? '<span class="tr">' + esc(item[1]) + "</span>" : '<span class="q2">' + img("Speaking head") + "Say it out loud first</span>") +
+      (c.type === "letter" ? "" : '<span class="big-en">' + esc(item[2]) + "</span>") +
+      (state.revealed ? '<span class="tr">' + esc(item[1]) + "</span>" + arHTML(c, item) : '<span class="q2">' + img("Speaking head") + "Say it out loud first</span>") +
       "</div>" +
       (state.revealed
         ? '<div class="judge"><button type="button" class="btn no" id="nope">' + img("Thumbs down") + 'Not yet</button>' +
@@ -1342,6 +1582,63 @@ body.flash .app { animation: flashy .6s ease-out; }
     document.getElementById("nope").onclick = () => judge(false);
   }
 
+  // ----- Write it: hear it, then build the word letter by letter (right to left) -----
+  function startWrite(ci) {
+    state = { view: "write", mode: "write", cat: ci, total: ROUNDS, r: 0, score: 0, extra: 0, asked: {}, wrong: {}, fixed: {} };
+    window.scrollTo(0, 0);
+    ready.then(() => setupWrite());
+  }
+  function setupWrite() {
+    const c = CATS[state.cat];
+    state.target = pickTarget(c, state, canWrite);
+    const word = [...written(c.items[state.target])];
+    const extra = shuffle(ABC.filter(l => !word.includes(l))).slice(0, word.length > 6 ? 2 : 3);
+    state.word = word; state.built = 0; state.firstTry = true; state.answered = false;
+    state.tiles = shuffle(word.concat(extra)).map((ch, id) => ({ ch, id, used: false }));
+    render();
+    say(c.items[state.target][0]);
+  }
+  function renderWrite() {
+    const c = CATS[state.cat], item = c.items[state.target], done = state.answered;
+    $screen.innerHTML = header(c) +
+      '<div class="ask"><button type="button" class="speaker" id="speaker" aria-label="Hear it again">' + img("Speaker high volume") + "</button>" +
+      '<div class="q">Write it</div><div class="progress" aria-label="Stars">' + stars(state) + "</div></div>" +
+      '<div class="big write-card"><span class="pic">' + picHTML(c, item) + "</span>" +
+      '<span class="en">' + esc(item[2]) + " · " + esc(item[1]) + "</span>" +
+      '<div class="slot' + (done ? " done" : "") + '" id="slot"><span class="ar" lang="ar">' + esc(state.word.slice(0, state.built).join("")) + "</span></div></div>" +
+      (done ? "" : '<div class="letters" id="letters">' + state.tiles.map(t =>
+        '<button type="button" data-id="' + t.id + '" class="' + (t.used ? "used " : "") + (t.ch === " " ? "sp" : "") + '"' + (t.ch === " " ? ' aria-label="space">space' : ">" + t.ch) + "</button>").join("") + "</div>");
+    document.getElementById("back").onclick = () => go("cat", { cat: state.cat });
+    document.getElementById("speaker").onclick = () => say(item[0]);
+    if (done) { showNext(setupWrite); return; }
+    $screen.querySelectorAll("#letters button").forEach(b => b.onclick = () => placeLetter(b));
+  }
+  function placeLetter(b) {
+    const c = CATS[state.cat], item = c.items[state.target], t = item[0];
+    const tile = state.tiles[+b.dataset.id];
+    if (tile.used || state.answered) return;
+    if (tile.ch === state.word[state.built]) {
+      tile.used = true; state.built++; sfx("pop");
+      b.classList.add("used");
+      document.querySelector("#slot .ar").textContent = state.word.slice(0, state.built).join("");
+      if (state.built < state.word.length) return;
+      state.answered = true;
+      record(t, "write", state.firstTry);
+      if (state.wrong[t] && state.firstTry) state.fixed[t] = true;
+      state.asked[t] = (state.asked[t] || 0) + 1;
+      state.score = Math.min(state.score + 1, state.total);
+      sfx("yay"); render(); party(document.getElementById("slot")); say(t);
+    } else {
+      if (state.firstTry) { state.firstTry = false; state.wrong[t] = true; }
+      b.classList.remove("wrong"); void b.offsetWidth; b.classList.add("wrong");
+      sfx("bwomp"); bounce(cat);
+      // show which letter comes next
+      const want = state.tiles.find(x => !x.used && x.ch === state.word[state.built]);
+      const wb = want && document.querySelector('#letters button[data-id="' + want.id + '"]');
+      if (wb) setTimeout(() => bounce(wb), 450);
+    }
+  }
+
   function renderWin() {
     const from = state.from;
     $screen.innerHTML =
@@ -1354,7 +1651,7 @@ body.flash .app { animation: flashy .6s ease-out; }
     setTimeout(() => { rain(50); sfx("pop"); }, 1600);
     setTimeout(() => { burst(null, null, null, 40); sfx("tada"); }, 2400);
     say("مَبْروك");
-    document.getElementById("again").onclick = () => from === "speak" ? startSpeak(state.cat) : startGame(state.cat);
+    document.getElementById("again").onclick = () => ({ speak: startSpeak, write: startWrite }[from] || startGame)(state.cat);
     document.getElementById("home").onclick = () => go("home");
   }
 
@@ -1365,10 +1662,10 @@ body.flash .app { animation: flashy .6s ease-out; }
     document.querySelectorAll("#" + id + " button").forEach(b => b.onclick = () => {
       prefs[key] = Number(b.dataset.v); store.set(key, prefs[key]); setSeg(id, prefs[key]);
       if (key === "speed") say("مَرْحَبا");
-      if (key === "spell" && state.view === "game") render();
+      if ((key === "spell" || key === "ar") && state.view !== "home") render();
     });
   }
-  bindSeg("speedSeg", "speed"); bindSeg("optSeg", "opts"); bindSeg("spellSeg", "spell");
+  bindSeg("speedSeg", "speed"); bindSeg("optSeg", "opts"); bindSeg("spellSeg", "spell"); bindSeg("arSeg", "ar");
   const sBtn = document.getElementById("setBtn"), panel = document.getElementById("panel");
   sBtn.onclick = () => { const open = panel.hidden; panel.hidden = !open; sBtn.setAttribute("aria-pressed", String(open)); sBtn.setAttribute("aria-expanded", String(open)); };
   document.getElementById("resetBtn").onclick = () => {

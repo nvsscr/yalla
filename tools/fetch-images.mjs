@@ -4,9 +4,9 @@ import path from "node:path";
 const [page, pathsFile, outDir] = process.argv.slice(2);
 const html = fs.readFileSync(page, "utf8");
 const data = JSON.parse(html.split("/*DATA*/")[1].split("/*END*/")[0]);
-const extra = ["Cat","Cat face","Hot beverage","Deciduous tree","Evergreen tree","Blossom","Sun with face","Cloud","Star","Party popper","Sparkles","Glowing star","Balloon","Trophy","Counterclockwise arrows button","House","Eyes","Video game","Speaker high volume","Speaking head","Red apple","Thumbs up","Thumbs down","Waving hand","Shuffle tracks button","Paw prints"];
+const extra = ["Cat","Cat face","Hot beverage","Deciduous tree","Evergreen tree","Blossom","Sun with face","Cloud","Star","Party popper","Sparkles","Glowing star","Balloon","Trophy","Counterclockwise arrows button","House","Eyes","Video game","Speaker high volume","Speaking head","Red apple","Thumbs up","Thumbs down","Waving hand","Shuffle tracks button","Paw prints","Writing hand"];
 const names = new Set(extra);
-for (const c of data) { if (c.cover) names.add(c.cover); if (c.type !== "number") c.items.forEach(i => names.add(i[3])); }
+for (const c of data) { if (c.cover) names.add(c.cover); if (!c.type) c.items.forEach(i => names.add(i[3])); }
 const paths = fs.readFileSync(pathsFile, "utf8").split(/\r?\n/).filter(Boolean);
 const byName = new Map();
 for (const p of paths) { const n = p.split("/")[1].toLowerCase(); (byName.get(n) || byName.set(n, []).get(n)).push(p); }
