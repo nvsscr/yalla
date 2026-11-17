@@ -308,45 +308,670 @@ body.flash .app { animation: flashy .6s ease-out; }
   // Each item: [Arabic (only used to look up the recording), spelling in English letters, meaning, picture].
   // Numbers: [Arabic, spelling, meaning, count].
   const CATS = /*DATA*/[
-    {"id":"hello","en":"Hello & bye","cover":"Waving hand","items":[
-      ["مَرْحَبا","marhaba","Hello","Waving hand"],["أَهْلا وَسَهْلا","ahlan wa sahlan","Welcome!","Hugging face"],["صَباح الخير","sabah el-kheir","Good morning","Sunrise"],
-      ["صَباح النّور","sabah en-nour","Good morning (reply)","Sun"],["مَسا الخير","masa el-kheir","Good evening","Sunset"],["كيفَك؟","kifak?","How are you?","Slightly smiling face"],
-      ["مْنيح، الحَمْدِلله","mnih, el-hamdella","Good, thank God","Smiling face with smiling eyes"],["شو أَخْبارَك؟","shu akhbarak?","What's new?","Speech balloon"],["تْشَرَّفْنا","tsharrafna","Nice to meet you","Handshake"],
-      ["مَعَ السَّلامة","ma'a salameh","Goodbye","Door"],["يَلّا باي","yalla bye","Bye!","Person walking"],["تِصْبَح عَلى خير","tesbah 'ala kheir","Good night","Crescent moon"]]},
-    {"id":"basics","en":"The basics","cover":"Thumbs up","items":[
-      ["إي","eh","Yes","Thumbs up"],["لَأ","la'","No","Thumbs down"],["شُكْرًا","shukran","Thank you","Folded hands"],["عَفْوًا","'afwan","You're welcome","Smiling face with halo"],
-      ["مِن فَضْلَك","min fadlak","Please","Pleading face"],["عَن إذْنَك","'an iznak","Excuse me","Person raising hand"],["آسِف","aasef","Sorry","Pensive face"],["ما بَعْرِف","ma ba'ref","I don't know","Person shrugging"],
-      ["ما فْهِمِت","ma fhemt","I didn't understand","Confused face"],["عيدْها مَرّة تانْية","'idha marra tanyeh","Say it again","Counterclockwise arrows button"],["شْوَي شْوَي","shway shway","Slowly","Snail"],
-      ["ما في مُشْكِلة","ma fi mushkleh","No problem","OK hand"],["أَكيد","akid","Sure!","Check mark button"],["مُمْكِن؟","mumken?","Can I? / Is it OK?","Red question mark"]]},
-    {"id":"me","en":"About me","cover":"Speaking head","items":[
-      ["أَنا اسْمي","ana ismi …","My name is …","Name badge"],["شو اسْمَك؟","shu ismak?","What's your name?","Speaking head"],["مِن وين إنْتَ؟","min wein enta?","Where are you from?","Globe showing Europe-Africa"],
-      ["أَنا مِن فْرَنْسا","ana min Fransa","I'm from France","Airplane"],["عَم بِتْعَلَّم عَرَبي","'am bet'allam 'arabi","I'm learning Arabic","Books"],["بَحْكي شْوَي عَرَبي","bahki shway 'arabi","I speak a little Arabic","Pinching hand"],
-      ["بْتِحْكي إنْكْليزي؟","btehki inglizi?","Do you speak English?","Speaking head"],["قَدّيش عُمْرَك؟","addeish 'omrak?","How old are you?","Birthday cake"],["أَنا ساكِن هون","ana saken hon","I live here","House"],
-      ["أَنا طالِب","ana taleb","I'm a student","Graduation cap"],["بِشْتِغِل","bishteghel","I work","Briefcase"]]},
-    {"id":"food","en":"Food & drinks","cover":"Falafel","items":[
-      ["أَنا جوعان","ana ju'an","I'm hungry","Fork and knife with plate"],["أَنا عَطْشان","ana 'atshan","I'm thirsty","Cup with straw"],["مَيّ","mayy","Water","Droplet"],["قَهْوة","ahweh","Coffee","Hot beverage"],
-      ["شاي","shai","Tea","Teacup without handle"],["خِبِز","khebez","Bread","Flatbread"],["فَلافِل","falafel","Falafel","Falafel"],["بَدّي هاد","baddi had","I want this","Backhand index pointing down"],
-      ["زاكي كْتير!","zaki ktir!","Really tasty!","Face savoring food"],["صَحْتين","sahtein","Enjoy your meal!","Pot of food"],["خَلَص، شْبِعِت","khalas, shbe'et","I'm full","Face exhaling"],["الحْساب لَوْ سَمَحِت","el-hsab law samaht","The bill, please","Receipt"]]},
-    {"id":"family","en":"Family & friends","cover":"People hugging","items":[
-      ["إمّي","emmi","My mom","Woman"],["بَيّي","bayyi","My dad","Man"],["خَيّي","khayyi","My brother","Boy"],["أُخْتي","ekhti","My sister","Girl"],
-      ["تيتا","teta","Grandma","Old woman"],["جِدّو","jeddo","Grandpa","Old man"],["عيلْتي","'ayelti","My family","House with garden"],["رْفيقي","rfi'i","My friend","People hugging"],
-      ["حَبيبي","habibi","My dear","Red heart"],["بْحِبَّك","bhebbak","I love you","Smiling face with hearts"]]},
-    {"id":"feel","en":"How I feel","cover":"Grinning face","items":[
-      ["أَنا مَبْسوط","ana mabsout","I'm happy","Grinning face"],["أَنا زَعْلان","ana za'lan","I'm upset","Disappointed face"],["أَنا تَعْبان","ana ta'ban","I'm tired","Sleeping face"],
-      ["أَنا بَرْدان","ana bardan","I'm cold","Cold face"],["شوب كْتير","shob ktir","It's so hot","Hot face"],["أَنا مَريض","ana mareed","I'm sick","Face with thermometer"],
-      ["أَنا مِسْتَعْجِل","ana mest'ajel","I'm in a hurry","Stopwatch"],["وَلا يْهِمَّك","wala yhemmak","Don't worry","Relieved face"]]},
-    {"id":"out","en":"Out & about","cover":"Taxi","items":[
-      ["وين الحَمّام؟","wein el-hammam?","Where's the bathroom?","Toilet"],["قَدّيش حَقّو؟","addeish ha''o?","How much is it?","Money bag"],["غالي كْتير!","ghali ktir!","Too expensive!","Money with wings"],
-      ["هون","hon","Here","Round pushpin"],["هونيك","honik","Over there","Backhand index pointing right"],["عَ اليَمين","'al-yamin","On the right","Right arrow"],["عَ الشْمال","'ash-shmal","On the left","Left arrow"],
-      ["دُغْري","dughri","Straight ahead","Up arrow"],["وَقِّف هون","wa''ef hon","Stop here","Stop sign"],["قَريب","arib","Close by","Person walking"],["بْعيد","b'id","Far","Mountain"]]},
-    {"id":"slang","en":"Like a local","cover":"Star-struck","items":[
-      ["يَلّا!","yalla!","Let's go! / Come on!","Person running"],["خَلَص!","khalas!","Enough! / Done!","Raised hand"],["وَالله؟","wallah?","Really?","Face with open mouth"],["مَعْقول!","ma'oul!","No way!","Exploding head"],
-      ["إن شاء الله","inshallah","Hopefully","Crossed fingers"],["ما شاء الله","mashallah","Wow, amazing!","Star-struck"],["تْفَضَّل","tfaddal","Go ahead / Help yourself","Open hands"],["شو في؟","shu fi?","What's up?","Face with monocle"],
-      ["كِلّو تَمام","kello tamam","All good","Smiling face with sunglasses"],["يَعْني","ya'ni","Like… / I mean…","Thinking face"],["يا حَرام","ya haram","Aww, poor thing","Face holding back tears"],["وَلَوْ!","walaw!","Of course! / Don't mention it","Winking face"]]},
-    {"id":"numbers","en":"Numbers","type":"number","items":[
-      ["واحَد","wahad","one","1"],["تْنين","tnein","two","2"],["تْلاتة","tleteh","three","3"],["أَرْبْعة","arb'a","four","4"],["خَمْسة","khamseh","five","5"],
-      ["سِتّة","setteh","six","6"],["سَبْعة","sab'a","seven","7"],["تْمانْية","tmanyeh","eight","8"],["تِسْعة","tes'a","nine","9"],["عَشْرة","'ashra","ten","10"]]}
-  ]/*END*/;
+ {
+  "id": "hello",
+  "en": "Hello & bye",
+  "cover": "Waving hand",
+  "items": [
+   [
+    "مَرْحَبا",
+    "marhaba",
+    "Hello",
+    "Waving hand"
+   ],
+   [
+    "أَهْلا وَسَهْلا",
+    "ahlan wa sahlan",
+    "Welcome!",
+    "Hugging face"
+   ],
+   [
+    "صَباح الخير",
+    "sabah el-kheir",
+    "Good morning",
+    "Sunrise"
+   ],
+   [
+    "صَباح النّور",
+    "sabah en-nour",
+    "Good morning (reply)",
+    "Sun"
+   ],
+   [
+    "مَسا الخير",
+    "masa el-kheir",
+    "Good evening",
+    "Sunset"
+   ],
+   [
+    "كِيفَك؟",
+    "keefak?",
+    "How are you?",
+    "Slightly smiling face"
+   ],
+   [
+    "مْنيح، الحَمْدُ لِله",
+    "mneeh, alhamdulillah",
+    "Good, thank God",
+    "Smiling face with smiling eyes"
+   ],
+   [
+    "شُو أَخْبارَك؟",
+    "shoo akhbarak?",
+    "What's new?",
+    "Speech balloon"
+   ],
+   [
+    "تْشَرَّفْنا",
+    "tsharrafna",
+    "Nice to meet you",
+    "Handshake"
+   ],
+   [
+    "مَعَ السَّلامة",
+    "ma'a salameh",
+    "Goodbye",
+    "Door"
+   ],
+   [
+    "يَلّا، بايْ",
+    "yalla bye",
+    "Bye!",
+    "Person walking"
+   ],
+   [
+    "تِصْبَح عَلى خير",
+    "tesbah 'ala kheir",
+    "Good night",
+    "Crescent moon"
+   ]
+  ]
+ },
+ {
+  "id": "basics",
+  "en": "The basics",
+  "cover": "Thumbs up",
+  "items": [
+   [
+    "إِيهْ!",
+    "ehh",
+    "Yes",
+    "Thumbs up"
+   ],
+   [
+    "لا",
+    "la",
+    "No",
+    "Thumbs down"
+   ],
+   [
+    "شُكْرًا",
+    "shukran",
+    "Thank you",
+    "Folded hands"
+   ],
+   [
+    "عَفْوًا",
+    "'afwan",
+    "You're welcome",
+    "Smiling face with halo"
+   ],
+   [
+    "مِن فَضْلَك",
+    "min fadlak",
+    "Please",
+    "Pleading face"
+   ],
+   [
+    "عَن إذْنَك",
+    "'an iznak",
+    "Excuse me",
+    "Person raising hand"
+   ],
+   [
+    "آسِف",
+    "aasef",
+    "Sorry",
+    "Pensive face"
+   ],
+   [
+    "ما بَعْرِف",
+    "ma ba'ref",
+    "I don't know",
+    "Person shrugging"
+   ],
+   [
+    "ما فْهِمِت",
+    "ma fhemt",
+    "I didn't understand",
+    "Confused face"
+   ],
+   [
+    "عيدْها مَرّة تانْية",
+    "'idha marra tanyeh",
+    "Say it again",
+    "Counterclockwise arrows button"
+   ],
+   [
+    "شْوَي شْوَي",
+    "shway shway",
+    "Slowly",
+    "Snail"
+   ],
+   [
+    "ما في مُشْكِلة",
+    "ma fi mushkleh",
+    "No problem",
+    "OK hand"
+   ],
+   [
+    "أَكيد",
+    "akid",
+    "Sure!",
+    "Check mark button"
+   ],
+   [
+    "مُمْكِن؟",
+    "mumken?",
+    "Can I? / Is it OK?",
+    "Red question mark"
+   ]
+  ]
+ },
+ {
+  "id": "me",
+  "en": "About me",
+  "cover": "Speaking head",
+  "items": [
+   [
+    "أَنا إِسْمي",
+    "ana ismi …",
+    "My name is …",
+    "Name badge"
+   ],
+   [
+    "شُو إِسْمَك؟",
+    "shoo ismak?",
+    "What's your name?",
+    "Speaking head"
+   ],
+   [
+    "مِن وين إنْتَ؟",
+    "min wein enta?",
+    "Where are you from?",
+    "Globe showing Europe-Africa"
+   ],
+   [
+    "أَنا مِن فْرَنْسا",
+    "ana min Fransa",
+    "I'm from France",
+    "Airplane"
+   ],
+   [
+    "عَم بِتْعَلَّم العَرَبي",
+    "'am bet'allam alarabi",
+    "I'm learning Arabic",
+    "Books"
+   ],
+   [
+    "بَحْكي شْوَي عَرَبي",
+    "bahki shway 'arabi",
+    "I speak a little Arabic",
+    "Pinching hand"
+   ],
+   [
+    "بْتِحْكي إِنْكْلِيزي؟",
+    "btehki inglizi?",
+    "Do you speak English?",
+    "Speaking head"
+   ],
+   [
+    "أَدّيش عُمْرَك؟",
+    "addeish 'omrak?",
+    "How old are you?",
+    "Birthday cake"
+   ],
+   [
+    "أَنا ساكِن هُون",
+    "ana saken hon",
+    "I live here",
+    "House"
+   ],
+   [
+    "أَنا طالِب",
+    "ana taleb",
+    "I'm a student",
+    "Graduation cap"
+   ],
+   [
+    "بِشْتِغِل",
+    "bishteghel",
+    "I work",
+    "Briefcase"
+   ]
+  ]
+ },
+ {
+  "id": "food",
+  "en": "Food & drinks",
+  "cover": "Falafel",
+  "items": [
+   [
+    "أَنا جوعان",
+    "ana ju'an",
+    "I'm hungry",
+    "Fork and knife with plate"
+   ],
+   [
+    "أَنا عَطْشان",
+    "ana 'atshan",
+    "I'm thirsty",
+    "Cup with straw"
+   ],
+   [
+    "مَيّ",
+    "mayy",
+    "Water",
+    "Droplet"
+   ],
+   [
+    "قَهْوة",
+    "ahweh",
+    "Coffee",
+    "Hot beverage"
+   ],
+   [
+    "شاي",
+    "shay",
+    "Tea",
+    "Teacup without handle"
+   ],
+   [
+    "خُبُز",
+    "khoboz",
+    "Bread",
+    "Flatbread"
+   ],
+   [
+    "فَلافِل",
+    "falafel",
+    "Falafel",
+    "Falafel"
+   ],
+   [
+    "بَدّي هاد",
+    "baddi had",
+    "I want this",
+    "Backhand index pointing down"
+   ],
+   [
+    "زاكي كِتير!",
+    "zaki ketir!",
+    "Really tasty!",
+    "Face savoring food"
+   ],
+   [
+    "صَحْتين",
+    "sahtein",
+    "Enjoy your meal!",
+    "Pot of food"
+   ],
+   [
+    "خَلَص، شْبِعِت",
+    "khalas, shbe'et",
+    "I'm full",
+    "Face exhaling"
+   ],
+   [
+    "الحْساب لَوْ سَمَحِت",
+    "el-hsab law samaht",
+    "The bill, please",
+    "Receipt"
+   ]
+  ]
+ },
+ {
+  "id": "family",
+  "en": "Family & friends",
+  "cover": "People hugging",
+  "items": [
+   [
+    "إمّي",
+    "emmi",
+    "My mom",
+    "Woman"
+   ],
+   [
+    "أَبوي",
+    "aboy",
+    "My dad",
+    "Man"
+   ],
+   [
+    "أَخوي",
+    "akhoy",
+    "My brother",
+    "Boy"
+   ],
+   [
+    "أُخْتي",
+    "okhty",
+    "My sister",
+    "Girl"
+   ],
+   [
+    "تيتا",
+    "teta",
+    "Grandma",
+    "Old woman"
+   ],
+   [
+    "جِدّو",
+    "jeddo",
+    "Grandpa",
+    "Old man"
+   ],
+   [
+    "عيلْتي",
+    "'ayelti",
+    "My family",
+    "House with garden"
+   ],
+   [
+    "رْفيقي",
+    "rfi'i",
+    "My friend",
+    "People hugging"
+   ],
+   [
+    "حَبيبي",
+    "habibi",
+    "My dear",
+    "Red heart"
+   ],
+   [
+    "بْحِبَّك",
+    "bhebbak",
+    "I love you",
+    "Smiling face with hearts"
+   ]
+  ]
+ },
+ {
+  "id": "feel",
+  "en": "How I feel",
+  "cover": "Grinning face",
+  "items": [
+   [
+    "أَنا مَبْسوط",
+    "ana mabsout",
+    "I'm happy",
+    "Grinning face"
+   ],
+   [
+    "أَنا زَعْلان",
+    "ana za'lan",
+    "I'm upset",
+    "Disappointed face"
+   ],
+   [
+    "أنا تعبان",
+    "ana ta'ban",
+    "I'm tired",
+    "Sleeping face"
+   ],
+   [
+    "أَنا بَرْدان",
+    "ana bardan",
+    "I'm cold",
+    "Cold face"
+   ],
+   [
+    "كْتير حَرّ",
+    "khteer harr",
+    "It's so hot",
+    "Hot face"
+   ],
+   [
+    "أَنا مَريض",
+    "ana mareed",
+    "I'm sick",
+    "Face with thermometer"
+   ],
+   [
+    "أَنا مِسْتَعْجِل",
+    "ana mest'ajel",
+    "I'm in a hurry",
+    "Stopwatch"
+   ],
+   [
+    "وَلا يْهِمَّك",
+    "wala yhemmak",
+    "Don't worry",
+    "Relieved face"
+   ]
+  ]
+ },
+ {
+  "id": "out",
+  "en": "Out & about",
+  "cover": "Taxi",
+  "items": [
+   [
+    "وين الحَمّام؟",
+    "wein el-hammam?",
+    "Where's the bathroom?",
+    "Toilet"
+   ],
+   [
+    "أَدّيش حَأّو؟",
+    "addeish ha''o?",
+    "How much is it?",
+    "Money bag"
+   ],
+   [
+    "غالي كِتير!",
+    "ghali ketir!",
+    "Too expensive!",
+    "Money with wings"
+   ],
+   [
+    "هُون",
+    "hon",
+    "Here",
+    "Round pushpin"
+   ],
+   [
+    "هُونيك",
+    "honik",
+    "Over there",
+    "Backhand index pointing right"
+   ],
+   [
+    "عَ اليَمين",
+    "'al-yamin",
+    "On the right",
+    "Right arrow"
+   ],
+   [
+    "عَشْمال",
+    "'ash-shmal",
+    "On the left",
+    "Left arrow"
+   ],
+   [
+    "دُغْري",
+    "dughri",
+    "Straight ahead",
+    "Up arrow"
+   ],
+   [
+    "وَقِّف هُون",
+    "wa''ef hon",
+    "Stop here",
+    "Stop sign"
+   ],
+   [
+    "قَريب",
+    "arib",
+    "Close by",
+    "Person walking"
+   ],
+   [
+    "بْعيد",
+    "b'id",
+    "Far",
+    "Mountain"
+   ]
+  ]
+ },
+ {
+  "id": "slang",
+  "en": "Like a local",
+  "cover": "Star-struck",
+  "items": [
+   [
+    "يلا!",
+    "yalla!",
+    "Let's go! / Come on!",
+    "Person running"
+   ],
+   [
+    "خَلَص!",
+    "khalas!",
+    "Enough! / Done!",
+    "Raised hand"
+   ],
+   [
+    "والله؟",
+    "wallah?",
+    "Really?",
+    "Face with open mouth"
+   ],
+   [
+    "مَعْقول!",
+    "ma'oul!",
+    "No way!",
+    "Exploding head"
+   ],
+   [
+    "إن شاء الله",
+    "inshallah",
+    "Hopefully",
+    "Crossed fingers"
+   ],
+   [
+    "ما شاء الله",
+    "mashallah",
+    "Wow, amazing!",
+    "Star-struck"
+   ],
+   [
+    "تْفَضَّل",
+    "tfaddal",
+    "Go ahead / Help yourself",
+    "Open hands"
+   ],
+   [
+    "شُو فِي؟",
+    "sho fi?",
+    "What's up?",
+    "Face with monocle"
+   ],
+   [
+    "كِلّو تَمام",
+    "kello tamam",
+    "All good",
+    "Smiling face with sunglasses"
+   ],
+   [
+    "يَعْني",
+    "ya'ni",
+    "Like… / I mean…",
+    "Thinking face"
+   ],
+   [
+    "يا حَرام",
+    "ya haram",
+    "Aww, poor thing",
+    "Face holding back tears"
+   ],
+   [
+    "وَلَوْ!",
+    "walaw!",
+    "Of course! / Don't mention it",
+    "Winking face"
+   ]
+  ]
+ },
+ {
+  "id": "numbers",
+  "en": "Numbers",
+  "type": "number",
+  "items": [
+   [
+    "واحَد",
+    "wahad",
+    "one",
+    "1"
+   ],
+   [
+    "تْنين",
+    "tnein",
+    "two",
+    "2"
+   ],
+   [
+    "تْلاتة",
+    "tleteh",
+    "three",
+    "3"
+   ],
+   [
+    "أَرْبْعة",
+    "arb'a",
+    "four",
+    "4"
+   ],
+   [
+    "خَمْسة",
+    "khamseh",
+    "five",
+    "5"
+   ],
+   [
+    "سِتّة",
+    "setteh",
+    "six",
+    "6"
+   ],
+   [
+    "سَبْعة",
+    "sab'a",
+    "seven",
+    "7"
+   ],
+   [
+    "تْمانْية",
+    "tmanyeh",
+    "eight",
+    "8"
+   ],
+   [
+    "تِسْعة",
+    "tes'a",
+    "nine",
+    "9"
+   ],
+   [
+    "عَشْرة",
+    "'ashra",
+    "ten",
+    "10"
+   ]
+  ]
+ }
+]/*END*/;
   // "Mix it up": every phrase (not numbers) together
   const PHRASES = CATS.filter(c => !c.type);
   const ALL_ID = "mix";
