@@ -1,0 +1,1 @@
+{ "version": "0.0.1", "configurations": [ { "name": "yalla", "runtimeExecutable": "python", "runtimeArgs": ["-m", "http.server", "8767"], "port": 8767 } ] }

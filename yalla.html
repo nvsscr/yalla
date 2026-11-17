@@ -1,0 +1,767 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yalla! Spoken Arabic</title>
+<meta name="description" content="Learn to speak Levantine Arabic with pictures and sound. No alphabet needed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap">
+<style>
+/* Layout: one-screen phrase app over a warm evening landscape (sky, drifting clouds, olive hills,
+   a tappable sun and a cat). Deliberately single-theme, colors set explicitly. */
+:root {
+  --ol-c: #3A2416;
+  --sky-top: #FF9E6B;
+  --sky-bottom: #FFE3B8;
+  --hill-back: #B5C77A;
+  --hill-front: #7FA35A;
+  --ink: #3A2416;
+  --ink-soft: #7A5A44;
+  --card: #FFFDF8;
+  --sun: #FFC93C;
+  --berry: #E8505B;
+  --leaf: #2FA36B;
+  --sea: #2E7DD7;
+  --shadow: 0 6px 0 rgba(58,36,22,.14);
+  --display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  color-scheme: light;
+}
+html, body { height: 100%; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 70%) fixed, var(--sky-bottom);
+  color: var(--ink); font-family: var(--display); font-size: 18px;
+  overflow-x: hidden; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--sky-top); }
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; touch-action: manipulation; }
+button:focus-visible { outline: 4px solid var(--sea); outline-offset: 3px; }
+img { -webkit-user-drag: none; }
+/* dark outline so white text never disappears on the sky */
+.ol {
+  color: #fff !important;
+  text-shadow: 2px 0 0 var(--ol-c), -2px 0 0 var(--ol-c), 0 2px 0 var(--ol-c), 0 -2px 0 var(--ol-c),
+               1.5px 1.5px 0 var(--ol-c), -1.5px -1.5px 0 var(--ol-c), 1.5px -1.5px 0 var(--ol-c), -1.5px 1.5px 0 var(--ol-c),
+               0 4px 0 var(--ol-c) !important;
+}
+
+/* ---------- Loader: a coffee cup steams, then the cat pops out ---------- */
+.loader { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; align-content: center; gap: 22px;
+  background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom)); transition: opacity .45s; }
+.loader.out { opacity: 0; pointer-events: none; }
+.loader .cupbox { position: relative; width: 150px; height: 150px; }
+.loader .cupbox img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.loader .cup { animation: eggwob 1.1s ease-in-out infinite; transform-origin: 50% 90%; }
+.loader .hatch { opacity: 0; transform: scale(.3); }
+.loader.hatched .cup { animation: eggpop .35s ease-in forwards; }
+.loader.hatched .hatch { animation: hatchpop .55s .2s cubic-bezier(.3,1.6,.5,1) forwards; }
+.loader .shadow { position: absolute; left: 30px; right: 30px; bottom: -8px; height: 14px; border-radius: 50%; background: rgba(58,36,22,.15); animation: shad 1.1s ease-in-out infinite; }
+@keyframes eggwob { 0%,100% { transform: rotate(0) } 15% { transform: rotate(-12deg) } 30% { transform: rotate(10deg) } 45% { transform: rotate(-6deg) } 60% { transform: rotate(0) translateY(-14px) } 75% { transform: rotate(0) } }
+@keyframes eggpop { to { transform: scale(1.3); opacity: 0; } }
+@keyframes hatchpop { to { opacity: 1; transform: scale(1); } }
+@keyframes shad { 60% { transform: scaleX(.8); opacity: .6; } }
+.ldots { display: flex; gap: 12px; }
+.ldots i { width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 3px 0 rgba(58,36,22,.2); animation: ldot 1s ease-in-out infinite; }
+.ldots i:nth-child(2) { animation-delay: .15s; background: var(--sun); }
+.ldots i:nth-child(3) { animation-delay: .3s; background: var(--leaf); }
+@keyframes ldot { 0%,100% { transform: translateY(0) } 40% { transform: translateY(-16px) } }
+
+/* ---------- Living background ---------- */
+.scene { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.cloud { position: absolute; left: -200px; opacity: .9; animation: drift linear infinite; }
+.cloud.c1 { top: 8%; width: 150px; animation-duration: 70s; }
+.cloud.c2 { top: 26%; width: 110px; animation-duration: 95s; animation-delay: -40s; opacity: .75; }
+.cloud.c3 { top: 46%; width: 90px; animation-duration: 120s; animation-delay: -80s; opacity: .65; }
+@keyframes drift { from { transform: translateX(0); } to { transform: translateX(calc(100vw + 400px)); } }
+.hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 150px; }
+.hills .back { fill: var(--hill-back); }
+.hills .front { fill: var(--hill-front); }
+.tree { position: absolute; bottom: 30px; width: 60px; animation: sway 3.4s ease-in-out infinite alternate; transform-origin: bottom center; }
+.tree.f1 { right: 22%; } .tree.f2 { right: 6%; bottom: 52px; width: 48px; animation-delay: -1.5s; } .tree.f3 { left: 42%; bottom: 16px; width: 44px; animation-delay: -.7s; }
+@keyframes sway { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+
+.sunbtn { position: fixed; z-index: 2; top: calc(env(safe-area-inset-top, 0px) + 70px); right: max(10px, env(safe-area-inset-right, 0px)); width: 92px; height: 92px; opacity: .95; }
+.sunbtn img { width: 100%; height: 100%; animation: spin 30s linear infinite; }
+.sunbtn.happy img { animation: spinfast .9s ease-out; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spinfast { from { transform: rotate(0) scale(1.2); } to { transform: rotate(720deg) scale(1); } }
+
+.cat { position: fixed; z-index: 6; left: max(10px, env(safe-area-inset-left, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 8px); width: 96px; height: 96px; }
+.cat img { width: 100%; height: 100%; animation: idle 2.4s ease-in-out infinite; transform-origin: bottom center; }
+.cat.hop img { animation: cathop .7s ease-out; }
+@keyframes idle { 0%,100% { transform: scale(1, 1); } 50% { transform: scale(1.04, .96); } }
+@keyframes cathop { 0% { transform: translateY(0) } 30% { transform: translateY(-50px) rotate(-12deg) } 60% { transform: translateY(0) scale(1.1,.9) } 100% { transform: none } }
+
+/* ---------- App ---------- */
+.app {
+  position: relative; z-index: 3; pointer-events: none;
+  min-height: 100%; display: flex; flex-direction: column; box-sizing: border-box;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px 130px; max-width: 1040px; margin: 0 auto;
+}
+.app button, .app .panel { pointer-events: auto; }
+
+.bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; margin-right: auto; }
+.brand .logo { width: 48px; height: 48px; border-radius: 16px; background: var(--sun); display: grid; place-items: center; box-shadow: var(--shadow); }
+.brand .logo img { width: 36px; height: 36px; }
+.brand b { font-size: 1.6rem; font-weight: 800; line-height: 1; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; background: var(--card); font-size: .9rem; font-weight: 700; box-shadow: 0 3px 0 rgba(58,36,22,.12); }
+.chip img { width: 22px; height: 22px; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--card); }
+.stars { background: var(--sun); }
+
+.screen { flex: 1; display: flex; flex-direction: column; gap: 18px; margin-top: 18px; }
+.back { flex: none; width: 60px; height: 60px; border-radius: 20px; background: var(--card); font-size: 30px; font-weight: 800; box-shadow: var(--shadow); display: grid; place-items: center; }
+.row { display: flex; align-items: center; gap: 14px; }
+.row h2 { margin: 0; font-size: 1.8rem; font-weight: 800; line-height: 1.1; text-wrap: balance; display: flex; align-items: center; gap: 10px; }
+.row h2 img { width: 48px; height: 48px; filter: drop-shadow(0 3px 0 rgba(58,36,22,.15)); }
+
+.hello { align-self: flex-start; display: flex; align-items: center; gap: 12px; font-size: 2.3rem; font-weight: 800; line-height: 1.05; text-align: left; }
+.hello img { width: 64px; height: 64px; }
+.hello small { display: block; font-size: 1.05rem; font-weight: 700; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+.tile {
+  border-radius: 28px; padding: 16px 10px 12px; background: var(--card); box-shadow: var(--shadow);
+  display: flex; flex-direction: column; align-items: center; gap: 4px; transition: transform .15s;
+}
+.tile:hover img { transform: rotate(-6deg) scale(1.06); }
+.tile img { width: 84px; height: 84px; transition: transform .2s; }
+.tile:active { transform: scale(.95) translateY(3px); box-shadow: 0 2px 0 rgba(58,36,22,.12); }
+.tile .en { font-size: 1.15rem; font-weight: 800; line-height: 1.15; text-align: center; }
+.tile .bar2 { width: 70%; height: 8px; border-radius: 9px; background: #F1E4D3; overflow: hidden; margin-top: 4px; }
+.tile .bar2 i { display: block; height: 100%; background: var(--leaf); border-radius: 9px; }
+.cvnum { font-size: 2.6rem; font-weight: 800; color: var(--sea); line-height: 84px; height: 84px; }
+.row h2 .cvnum { font-size: 1.5rem; line-height: 48px; height: 48px; text-shadow: none; }
+
+.modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; flex: 1; align-content: center; }
+.mode { border-radius: 32px; padding: 20px 16px; color: #fff; box-shadow: 0 8px 0 rgba(58,36,22,.2); display: flex; align-items: center; justify-content: center; gap: 14px; }
+.mode img { width: 92px; height: 92px; animation: idle 2.4s ease-in-out infinite; }
+.mode b { font-size: 1.8rem; font-weight: 800; }
+.mode.look { background: var(--sea); }
+.mode.play { background: var(--leaf); }
+.mode.speak { background: var(--berry); }
+.mode:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(58,36,22,.2); }
+
+.learn { flex: 1; display: grid; grid-template-columns: 72px 1fr 72px; align-items: center; gap: 12px; }
+.arrow { width: 72px; height: 72px; border-radius: 50%; background: var(--sun); font-size: 32px; font-weight: 800; box-shadow: var(--shadow); display: grid; place-items: center; }
+.arrow img { width: 44px; height: 44px; }
+.arrow:disabled { opacity: .35; }
+.big {
+  border-radius: 40px; background: var(--card); box-shadow: 0 10px 0 rgba(58,36,22,.14);
+  min-height: 360px; padding: 24px 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 0;
+}
+.big .pic img.main { width: clamp(140px, 34vw, 220px); height: auto; aspect-ratio: 1; max-width: 100%; filter: drop-shadow(0 10px 10px rgba(58,36,22,.12)); }
+.big .tr { font-size: clamp(1.9rem, 7vw, 3rem); font-weight: 800; line-height: 1.05; text-align: center; overflow-wrap: anywhere; text-wrap: balance; color: var(--ink); }
+.big .en { font-size: 1.15rem; font-weight: 700; color: var(--ink-soft); text-align: center; }
+.big .hint { font-size: .9rem; color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
+.big .hint img { width: 26px; height: 26px; }
+.dots { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.dots i { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,.75); }
+.dots i.on { background: var(--sea); transform: scale(1.3); }
+
+.num { display: grid; place-items: center; gap: 6px; }
+.num .digit { font-size: clamp(3rem, 10vw, 5rem); font-weight: 800; color: var(--sea); line-height: .9; }
+.num .apples { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: 260px; }
+.num .apples img { width: 40px; height: 40px; }
+.opt .num .digit { font-size: clamp(2rem, 7vw, 3.4rem); }
+.opt .num .apples { max-width: 170px; }
+.opt .num .apples img { width: 24px; height: 24px; }
+
+.ask { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 26px; background: var(--card); box-shadow: var(--shadow); flex-wrap: wrap; }
+.ask .speaker { width: 68px; height: 68px; flex: none; border-radius: 50%; background: var(--berry); display: grid; place-items: center; box-shadow: 0 5px 0 rgba(58,36,22,.18); }
+.ask .speaker img { width: 42px; height: 42px; }
+.ask .speaker.pulse { animation: pulse 1s ease-in-out 2; }
+.ask .q { font-size: 1.6rem; font-weight: 800; line-height: 1.1; min-width: 0; flex: 1 1 140px; overflow-wrap: anywhere; }
+.progress { display: flex; gap: 4px; flex: none; }
+.progress img { width: 26px; height: 26px; opacity: .25; filter: grayscale(1); }
+.progress img.on { opacity: 1; filter: none; }
+.opts { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); flex: 1; align-content: center; }
+.opt {
+  border-radius: 30px; background: var(--card); box-shadow: 0 8px 0 rgba(58,36,22,.14); min-height: 190px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; border: 5px solid transparent; padding: 12px; min-width: 0;
+}
+.opt img.main { width: clamp(84px, 20vw, 140px); height: auto; aspect-ratio: 1; max-width: 100%; }
+.opt .en { font-size: 1.05rem; font-weight: 800; line-height: 1.15; text-align: center; overflow-wrap: anywhere; }
+.opt.right { border-color: var(--leaf); background: #E3FAEE; animation: hop .5s; }
+.opt.wrong { animation: wiggle .45s; }
+.opt.fade { opacity: .35; }
+
+.speak-card .q2 { display: flex; align-items: center; gap: 8px; font-size: 1rem; font-weight: 700; color: var(--ink-soft); }
+.speak-card .q2 img { width: 30px; height: 30px; }
+.speak-card .big-en { font-size: clamp(1.6rem, 6vw, 2.4rem); font-weight: 800; text-align: center; text-wrap: balance; line-height: 1.1; }
+.speak-card .tr { animation: popin .35s cubic-bezier(.3,1.6,.5,1); }
+.reveal { align-self: center; padding: 16px 30px; }
+.speak-card { min-height: 0; flex: 1; max-height: 420px; }
+.judge { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; }
+.judge .btn { justify-content: center; padding: 12px 10px; font-size: 1.15rem; gap: 6px; }
+.judge .btn img { width: 36px; height: 36px; }
+.btn.no { background: #FFE1DC; }
+@keyframes popin { from { transform: scale(.4); opacity: 0; } }
+
+.win { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; }
+.win .trophy { width: 170px; height: 170px; animation: hop 1s ease-in-out infinite alternate; }
+.win h2 { margin: 0; font-size: 3rem; font-weight: 800; line-height: 1; }
+.win h2 small { display: block; font-size: 1.1rem; margin-top: 6px; }
+.win .got { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.win .got img { width: 48px; height: 48px; }
+.win .actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.btn { padding: 12px 22px; border-radius: 22px; font-size: 1.3rem; font-weight: 800; box-shadow: var(--shadow); background: var(--card); display: inline-flex; align-items: center; gap: 10px; }
+.btn img { width: 44px; height: 44px; }
+.btn.go { background: var(--leaf); color: #fff; }
+
+.panel { margin-top: 12px; padding: 16px; border-radius: 20px; background: var(--card); box-shadow: var(--shadow); display: grid; gap: 12px; font-size: .95rem; }
+.panel h3 { margin: 0; font-size: 1.1rem; }
+.panel label { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.panel p { margin: 0; color: var(--ink-soft); line-height: 1.45; max-width: 65ch; }
+.seg { display: inline-flex; background: #F6EBDD; border-radius: 12px; padding: 3px; }
+.seg button { padding: 6px 12px; border-radius: 10px; font-weight: 700; font-size: .9rem; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--card); }
+.linkbtn { justify-self: start; text-decoration: underline; color: var(--ink-soft); font-size: .9rem; }
+
+.rain { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 21; }
+.rain > * { position: absolute; top: -60px; animation: fall linear forwards; }
+.rain i { width: 12px; height: 18px; border-radius: 3px; }
+.rain img { width: 38px; height: 38px; }
+@keyframes fall { to { transform: translateY(calc(100vh + 120px)) rotate(var(--r)); } }
+body.flash .app { animation: flashy .6s ease-out; }
+@keyframes flashy { 0% { filter: brightness(1); transform: scale(1); } 30% { filter: brightness(1.2) saturate(1.3); transform: scale(1.02); } 100% { filter: none; transform: none; } }
+.cat.dance img { animation: dance .45s ease-in-out 5; }
+@keyframes dance { 0%,100% { transform: rotate(0) } 25% { transform: rotate(-16deg) translateY(-12px) scale(1.1) } 75% { transform: rotate(16deg) translateY(-12px) scale(1.1) } }
+.cat.bounce img { animation: wiggle .45s; }
+.burst { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 20; }
+.burst img { position: absolute; width: 40px; height: 40px; animation: fly 1.1s ease-out forwards; }
+
+.bounce { animation: hop .45s; }
+@keyframes hop { 0%{transform:scale(1)} 40%{transform:scale(1.1) translateY(-10px)} 100%{transform:scale(1)} }
+@keyframes wiggle { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-12px) rotate(-3deg)} 75%{transform:translateX(12px) rotate(3deg)} }
+@keyframes pulse { 50%{ transform: scale(1.15); } }
+@keyframes fly { to { transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+@media (max-width: 560px) {
+  .learn { grid-template-columns: 1fr 1fr; }
+  .learn .big { grid-column: 1 / -1; grid-row: 1; min-height: 320px; }
+  .learn .arrow { justify-self: center; }
+  .opt { min-height: 160px; }
+  .hello { font-size: 1.9rem; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .tile img { width: 72px; height: 72px; }
+  .mode { padding: 14px; } .mode img { width: 72px; height: 72px; } .mode b { font-size: 1.6rem; }
+  .sunbtn { width: 64px; height: 64px; top: calc(env(safe-area-inset-top, 0px) + 64px); }
+  .cat { width: 80px; height: 80px; }
+}
+</style>
+
+<div class="loader" id="loader">
+  <div class="cupbox"><span class="shadow"></span><img class="cup" src="img/hot-beverage.png" alt=""><img class="hatch" src="img/cat-face.png" alt=""></div>
+  <div class="ldots"><i></i><i></i><i></i></div>
+</div>
+
+<div class="scene" aria-hidden="true">
+  <img class="cloud c1" src="img/cloud.png" alt="">
+  <img class="cloud c2" src="img/cloud.png" alt="">
+  <img class="cloud c3" src="img/cloud.png" alt="">
+  <svg class="hills" viewBox="0 0 1200 150" preserveAspectRatio="none">
+    <path class="back" d="M0 80 C 180 20, 360 30, 520 70 S 860 120, 1200 40 L1200 150 L0 150 Z"/>
+    <path class="front" d="M0 120 C 220 70, 420 80, 640 110 S 1000 140, 1200 95 L1200 150 L0 150 Z"/>
+  </svg>
+  <img class="tree f1" src="img/deciduous-tree.png" alt="">
+  <img class="tree f2" src="img/evergreen-tree.png" alt="">
+  <img class="tree f3" src="img/blossom.png" alt="">
+</div>
+<button type="button" class="sunbtn" id="sun" aria-label="The sun"><img src="img/sun-with-face.png" alt=""></button>
+<button type="button" class="cat" id="cat" aria-label="The cat"><img src="img/cat.png" alt=""></button>
+
+<div class="app" id="app">
+  <header class="bar">
+    <div class="brand">
+      <div class="logo"><img src="img/cat-face.png" alt=""></div>
+      <b class="ol">Yalla!</b>
+    </div>
+    <button class="chip stars" id="starChip" type="button" aria-label="Stars earned"><img src="img/star.png" alt=""><span id="starCount">0</span></button>
+    <button class="chip" id="setBtn" type="button" aria-pressed="false" aria-expanded="false" aria-controls="panel">Settings</button>
+  </header>
+
+  <section class="panel" id="panel" hidden>
+    <h3>Settings</h3>
+    <label>Speaking speed
+      <span class="seg" id="speedSeg"><button type="button" data-v="0.75">Slow</button><button type="button" data-v="1">Normal</button></span>
+    </label>
+    <label>Pictures per question
+      <span class="seg" id="optSeg"><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button></span>
+    </label>
+    <label>Show the spelling in the listening game
+      <span class="seg" id="spellSeg"><button type="button" data-v="1">Show</button><button type="button" data-v="0">Hide</button></span>
+    </label>
+    <p>This is spoken Levantine Arabic (Lebanon, Syria, Palestine, Jordan), not the formal written kind. The spelling under each picture is just to help you remember: ' is a little catch in the throat, kh is like a French r, and gh is a softer gargle. Always copy the sound, not the letters. Phrases are said as a man would say them, to a man.</p>
+    <p>Each topic has three ways to practise: <b>look</b> (go through the phrases), <b>listen</b> (hear one, tap its picture) and <b>say it</b> (see the meaning, say it out loud, then check). The app keeps track of what you know: it never asks the same thing twice in a row, and mistakes come back a few questions later.</p>
+    <button type="button" class="linkbtn" id="resetBtn">Reset my progress</button>
+  </section>
+
+  <main class="screen" id="screen"></main>
+</div>
+
+<script>
+(function () {
+  // ---------- Content ----------
+  // Each item: [Arabic (only used to look up the recording), spelling in English letters, meaning, picture].
+  // Numbers: [Arabic, spelling, meaning, count].
+  const CATS = /*DATA*/[
+    {"id":"hello","en":"Hello & bye","cover":"Waving hand","items":[
+      ["مَرْحَبا","marhaba","Hello","Waving hand"],["أَهْلا وَسَهْلا","ahlan wa sahlan","Welcome!","Hugging face"],["صَباح الخير","sabah el-kheir","Good morning","Sunrise"],
+      ["صَباح النّور","sabah en-nour","Good morning (reply)","Sun"],["مَسا الخير","masa el-kheir","Good evening","Sunset"],["كيفَك؟","kifak?","How are you?","Slightly smiling face"],
+      ["مْنيح، الحَمْدِلله","mnih, el-hamdella","Good, thank God","Smiling face with smiling eyes"],["شو أَخْبارَك؟","shu akhbarak?","What's new?","Speech balloon"],["تْشَرَّفْنا","tsharrafna","Nice to meet you","Handshake"],
+      ["مَعَ السَّلامة","ma'a salameh","Goodbye","Door"],["يَلّا باي","yalla bye","Bye!","Person walking"],["تِصْبَح عَلى خير","tesbah 'ala kheir","Good night","Crescent moon"]]},
+    {"id":"basics","en":"The basics","cover":"Thumbs up","items":[
+      ["إي","eh","Yes","Thumbs up"],["لَأ","la'","No","Thumbs down"],["شُكْرًا","shukran","Thank you","Folded hands"],["عَفْوًا","'afwan","You're welcome","Smiling face with halo"],
+      ["مِن فَضْلَك","min fadlak","Please","Pleading face"],["عَن إذْنَك","'an iznak","Excuse me","Person raising hand"],["آسِف","aasef","Sorry","Pensive face"],["ما بَعْرِف","ma ba'ref","I don't know","Person shrugging"],
+      ["ما فْهِمِت","ma fhemt","I didn't understand","Confused face"],["عيدْها مَرّة تانْية","'idha marra tanyeh","Say it again","Counterclockwise arrows button"],["شْوَي شْوَي","shway shway","Slowly","Snail"],
+      ["ما في مُشْكِلة","ma fi mushkleh","No problem","OK hand"],["أَكيد","akid","Sure!","Check mark button"],["مُمْكِن؟","mumken?","Can I? / Is it OK?","Red question mark"]]},
+    {"id":"me","en":"About me","cover":"Speaking head","items":[
+      ["أَنا اسْمي","ana ismi …","My name is …","Name badge"],["شو اسْمَك؟","shu ismak?","What's your name?","Speaking head"],["مِن وين إنْتَ؟","min wein enta?","Where are you from?","Globe showing Europe-Africa"],
+      ["أَنا مِن فْرَنْسا","ana min Fransa","I'm from France","Airplane"],["عَم بِتْعَلَّم عَرَبي","'am bet'allam 'arabi","I'm learning Arabic","Books"],["بَحْكي شْوَي عَرَبي","bahki shway 'arabi","I speak a little Arabic","Pinching hand"],
+      ["بْتِحْكي إنْكْليزي؟","btehki inglizi?","Do you speak English?","Speaking head"],["قَدّيش عُمْرَك؟","addeish 'omrak?","How old are you?","Birthday cake"],["أَنا ساكِن هون","ana saken hon","I live here","House"],
+      ["أَنا طالِب","ana taleb","I'm a student","Graduation cap"],["بِشْتِغِل","bishteghel","I work","Briefcase"]]},
+    {"id":"food","en":"Food & drinks","cover":"Falafel","items":[
+      ["أَنا جوعان","ana ju'an","I'm hungry","Fork and knife with plate"],["أَنا عَطْشان","ana 'atshan","I'm thirsty","Cup with straw"],["مَيّ","mayy","Water","Droplet"],["قَهْوة","ahweh","Coffee","Hot beverage"],
+      ["شاي","shai","Tea","Teacup without handle"],["خِبِز","khebez","Bread","Flatbread"],["فَلافِل","falafel","Falafel","Falafel"],["بَدّي هاد","baddi had","I want this","Backhand index pointing down"],
+      ["زاكي كْتير!","zaki ktir!","Really tasty!","Face savoring food"],["صَحْتين","sahtein","Enjoy your meal!","Pot of food"],["خَلَص، شْبِعِت","khalas, shbe'et","I'm full","Face exhaling"],["الحْساب لَوْ سَمَحِت","el-hsab law samaht","The bill, please","Receipt"]]},
+    {"id":"family","en":"Family & friends","cover":"People hugging","items":[
+      ["إمّي","emmi","My mom","Woman"],["بَيّي","bayyi","My dad","Man"],["خَيّي","khayyi","My brother","Boy"],["أُخْتي","ekhti","My sister","Girl"],
+      ["تيتا","teta","Grandma","Old woman"],["جِدّو","jeddo","Grandpa","Old man"],["عيلْتي","'ayelti","My family","House with garden"],["رْفيقي","rfi'i","My friend","People hugging"],
+      ["حَبيبي","habibi","My dear","Red heart"],["بْحِبَّك","bhebbak","I love you","Smiling face with hearts"]]},
+    {"id":"feel","en":"How I feel","cover":"Grinning face","items":[
+      ["أَنا مَبْسوط","ana mabsout","I'm happy","Grinning face"],["أَنا زَعْلان","ana za'lan","I'm upset","Disappointed face"],["أَنا تَعْبان","ana ta'ban","I'm tired","Sleeping face"],
+      ["أَنا بَرْدان","ana bardan","I'm cold","Cold face"],["شوب كْتير","shob ktir","It's so hot","Hot face"],["أَنا مَريض","ana mareed","I'm sick","Face with thermometer"],
+      ["أَنا مِسْتَعْجِل","ana mest'ajel","I'm in a hurry","Stopwatch"],["وَلا يْهِمَّك","wala yhemmak","Don't worry","Relieved face"]]},
+    {"id":"out","en":"Out & about","cover":"Taxi","items":[
+      ["وين الحَمّام؟","wein el-hammam?","Where's the bathroom?","Toilet"],["قَدّيش حَقّو؟","addeish ha''o?","How much is it?","Money bag"],["غالي كْتير!","ghali ktir!","Too expensive!","Money with wings"],
+      ["هون","hon","Here","Round pushpin"],["هونيك","honik","Over there","Backhand index pointing right"],["عَ اليَمين","'al-yamin","On the right","Right arrow"],["عَ الشْمال","'ash-shmal","On the left","Left arrow"],
+      ["دُغْري","dughri","Straight ahead","Up arrow"],["وَقِّف هون","wa''ef hon","Stop here","Stop sign"],["قَريب","arib","Close by","Person walking"],["بْعيد","b'id","Far","Mountain"]]},
+    {"id":"slang","en":"Like a local","cover":"Star-struck","items":[
+      ["يَلّا!","yalla!","Let's go! / Come on!","Person running"],["خَلَص!","khalas!","Enough! / Done!","Raised hand"],["وَالله؟","wallah?","Really?","Face with open mouth"],["مَعْقول!","ma'oul!","No way!","Exploding head"],
+      ["إن شاء الله","inshallah","Hopefully","Crossed fingers"],["ما شاء الله","mashallah","Wow, amazing!","Star-struck"],["تْفَضَّل","tfaddal","Go ahead / Help yourself","Open hands"],["شو في؟","shu fi?","What's up?","Face with monocle"],
+      ["كِلّو تَمام","kello tamam","All good","Smiling face with sunglasses"],["يَعْني","ya'ni","Like… / I mean…","Thinking face"],["يا حَرام","ya haram","Aww, poor thing","Face holding back tears"],["وَلَوْ!","walaw!","Of course! / Don't mention it","Winking face"]]},
+    {"id":"numbers","en":"Numbers","type":"number","items":[
+      ["واحَد","wahad","one","1"],["تْنين","tnein","two","2"],["تْلاتة","tleteh","three","3"],["أَرْبْعة","arb'a","four","4"],["خَمْسة","khamseh","five","5"],
+      ["سِتّة","setteh","six","6"],["سَبْعة","sab'a","seven","7"],["تْمانْية","tmanyeh","eight","8"],["تِسْعة","tes'a","nine","9"],["عَشْرة","'ashra","ten","10"]]}
+  ]/*END*/;
+  // "Mix it up": every phrase (not numbers) together
+  const PHRASES = CATS.filter(c => !c.type);
+  const ALL_ID = "mix";
+  CATS.splice(PHRASES.length, 0, { id: ALL_ID, en: "Mix it up", cover: "Shuffle tracks button", items: PHRASES.flatMap(c => c.items) });
+  const ROUNDS = 6;
+  const slug = n => n.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const src = n => "img/" + slug(n) + ".png";
+  const img = (n, cls) => '<img src="' + src(n) + '" alt=""' + (cls ? ' class="' + cls + '"' : "") + ' draggable="false">';
+
+  // ---------- Prefs (per device) ----------
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("ya_" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem("ya_" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  const prefs = { speed: store.get("speed", 1), opts: store.get("opts", 3), spell: store.get("spell", 0), stars: store.get("stars", 0) };
+
+  // ---------- Voice: recorded clips, device voice only as a fallback ----------
+  const clips = {};
+  const ready = fetch("audio/clips.json").then(r => r.ok ? r.json() : {}).then(m => Object.assign(clips, m)).catch(() => {});
+  const player = new Audio();
+  player.preload = "auto";
+  let chain = Promise.resolve(), token = 0;
+  function playClip(text) {
+    return new Promise(resolve => {
+      const uri = clips[text];
+      if (!uri) return fallbackTTS(text).then(resolve);
+      let done = false, guard = null;
+      const fin = () => { if (!done) { done = true; clearTimeout(guard); resolve(); } };
+      player.onended = fin; player.onerror = fin; guard = setTimeout(fin, 8000);
+      player.src = uri; player.playbackRate = prefs.speed; player.preservesPitch = true;
+      const p = player.play(); if (p && p.catch) p.catch(fin);
+    });
+  }
+  function fallbackTTS(text) {
+    const s = window.speechSynthesis; if (!s) return Promise.resolve();
+    return new Promise(res => {
+      const u = new SpeechSynthesisUtterance(text); u.lang = "ar"; u.rate = .85 * prefs.speed;
+      const v = s.getVoices().find(v => /^ar/i.test(v.lang)); if (v) u.voice = v;
+      u.onend = res; u.onerror = res; setTimeout(res, 7000); s.speak(u);
+    });
+  }
+  function say(text, opts) {
+    opts = opts || {};
+    if (!opts.queue) { token++; try { player.pause(); } catch (e) {} if (window.speechSynthesis) speechSynthesis.cancel(); chain = Promise.resolve(); }
+    const my = token;
+    chain = chain.then(() => my === token ? playClip(text) : null);
+    return chain;
+  }
+
+  // ---------- Sound effects (Web Audio, no files): lots of happy noise ----------
+  let actx = null;
+  function sfx(kind) {
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      const t = actx.currentTime;
+      const tone = (type, f0, f1, at, dur, vol) => {
+        const o = actx.createOscillator(), g = actx.createGain(); o.connect(g); g.connect(actx.destination);
+        o.type = type; o.frequency.setValueAtTime(f0, t + at); if (f1) o.frequency.exponentialRampToValueAtTime(f1, t + at + dur);
+        g.gain.setValueAtTime(0.0001, t + at); g.gain.exponentialRampToValueAtTime(vol, t + at + .01); g.gain.exponentialRampToValueAtTime(.0001, t + at + dur);
+        o.start(t + at); o.stop(t + at + dur + .03);
+      };
+      const noise = (at, dur, vol, freq) => {
+        const len = Math.floor(actx.sampleRate * dur), buf = actx.createBuffer(1, len, actx.sampleRate), d = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+        const n = actx.createBufferSource(), f = actx.createBiquadFilter(), g = actx.createGain();
+        n.buffer = buf; f.type = "bandpass"; f.frequency.value = freq || 3000; g.gain.value = vol;
+        n.connect(f); f.connect(g); g.connect(actx.destination); n.start(t + at);
+      };
+      const S = {
+        tap:    () => tone("sine", 600, 900, 0, .08, .15),
+        pop:    () => { tone("sine", 900, 180, 0, .14, .35); noise(0, .05, .3, 2000); },
+        boing:  () => tone("triangle", 180, 720, 0, .35, .3),
+        meow:   () => { tone("sawtooth", 700, 1100, 0, .12, .07); tone("sawtooth", 1100, 520, .12, .35, .07); },
+        whoosh: () => { noise(0, .35, .5, 1200); tone("sine", 300, 1200, 0, .3, .12); },
+        slide:  () => tone("sine", 400, 1600, 0, .45, .2),
+        ding:   () => { tone("sine", 1046, 0, 0, .3, .25); tone("sine", 1568, 0, .08, .4, .22); },
+        yay:    () => { [523, 659, 784, 1046, 1318].forEach((f, i) => tone("triangle", f, 0, i * .07, .3, .2)); noise(.3, .4, .35, 6000); tone("sine", 2093, 0, .35, .3, .12); },
+        bwomp:  () => { tone("sawtooth", 300, 260, 0, .22, .12); tone("sawtooth", 260, 120, .24, .45, .12); },
+        tada:   () => {
+          [[523, 0], [523, .12], [523, .24], [659, .36], [784, .6], [1046, .9]].forEach(([f, at]) => { tone("triangle", f, 0, at, .35, .25); tone("square", f / 2, 0, at, .3, .05); });
+          [0, .36, .9].forEach(at => noise(at, .3, .5, 5000)); noise(1.2, .9, .4, 7000);
+        },
+        drum:   () => { for (let i = 0; i < 10; i++) noise(i * .06, .05, .5, 400); tone("sine", 120, 50, .6, .3, .5); }
+      };
+      (S[kind] || S.tap)();
+    } catch (e) {}
+  }
+  document.addEventListener("pointerdown", e => { if (e.target.closest && e.target.closest("button")) sfx("tap"); }, true);
+
+  // ---------- Helpers ----------
+  const $screen = document.getElementById("screen");
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  const coverImg = c => c.type === "number" ? '<span class="cvnum">123</span>' : img(c.cover);
+  const picKey = it => it[3];
+  function picHTML(cat, item) {
+    if (cat.type === "number") {
+      const n = +item[3];
+      return '<span class="num"><span class="digit">' + n + '</span><span class="apples">' + Array.from({ length: n }, () => img("Red apple")).join("") + "</span></span>";
+    }
+    return img(item[3], "main");
+  }
+  function addStars(n) { prefs.stars += n; store.set("stars", prefs.stars); document.getElementById("starCount").textContent = prefs.stars; }
+  function burst(x, y, names, count) {
+    const b = document.createElement("div"); b.className = "burst";
+    x = x == null ? innerWidth / 2 : x; y = y == null ? innerHeight * .45 : y;
+    for (let i = 0; i < (count || 20); i++) {
+      const s = document.createElement("img"); s.src = src(pick(names || ["Star","Party popper","Sparkles","Glowing star","Balloon"])); s.alt = "";
+      const a = Math.random() * Math.PI * 2, d = 90 + Math.random() * 220;
+      s.style.left = (x - 20) + "px"; s.style.top = (y - 20) + "px";
+      s.style.setProperty("--x", Math.cos(a) * d + "px"); s.style.setProperty("--y", Math.sin(a) * d + "px"); s.style.setProperty("--r", (Math.random() * 540 - 270) + "deg");
+      b.appendChild(s);
+    }
+    document.body.appendChild(b); setTimeout(() => b.remove(), 1300);
+  }
+  function bounce(el) { el.classList.remove("bounce"); void el.offsetWidth; el.classList.add("bounce"); }
+  function rain(n) {
+    const box = document.createElement("div"); box.className = "rain";
+    const names = ["Star", "Party popper", "Sparkles", "Glowing star", "Balloon", "Blossom", "Cat face", "Paw prints"];
+    for (let i = 0; i < (n || 36); i++) {
+      const e = document.createElement(Math.random() < .55 ? "i" : "img");
+      if (e.tagName === "IMG") { e.src = src(pick(names)); e.alt = ""; }
+      else e.style.background = pick(["#E8505B", "#FFC93C", "#2FA36B", "#2E7DD7", "#B66DFF", "#FF8A3D"]);
+      e.style.left = Math.random() * 100 + "vw";
+      e.style.animationDuration = (1.4 + Math.random() * 1.4) + "s";
+      e.style.animationDelay = (Math.random() * .6) + "s";
+      e.style.setProperty("--r", (Math.random() * 1080 - 540) + "deg");
+      box.appendChild(e);
+    }
+    document.body.appendChild(box); setTimeout(() => box.remove(), 3400);
+  }
+  function party(el) {
+    const r = el ? el.getBoundingClientRect() : null;
+    burst(r ? r.left + r.width / 2 : null, r ? r.top + r.height / 2 : null, null, 34);
+    rain(30); dance(); flash();
+  }
+  function dance() { cat.classList.remove("dance"); void cat.offsetWidth; cat.classList.add("dance"); }
+  function flash() { document.body.classList.remove("flash"); void document.body.offsetWidth; document.body.classList.add("flash"); }
+
+  // ---------- The cat & the sun ----------
+  const cat = document.getElementById("cat");
+  cat.onclick = () => {
+    sfx(pick(["meow", "boing", "slide"])); dance();
+    const r = cat.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, ["Sparkles", "Glowing star", "Paw prints", "Cat face"], 16);
+  };
+  const sun = document.getElementById("sun");
+  sun.onclick = () => {
+    sun.classList.remove("happy"); void sun.offsetWidth; sun.classList.add("happy");
+    const r = sun.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, ["Sparkles","Glowing star"], 18);
+    sfx("slide"); rain(16);
+  };
+  setInterval(() => { if (!document.hidden && Math.random() < .5) { cat.classList.remove("hop"); void cat.offsetWidth; cat.classList.add("hop"); } }, 4000);
+
+  // ---------- Smart question choice ----------
+  // Each phrase remembers how well you know it (box 0-6) and when it is due again, counted in questions answered.
+  // Right first try → up a box, back later and later (2, 4, 8, 16… questions). A mistake → box 0, back 2 questions later.
+  // The last 2 phrases asked (even in an earlier round) are never asked again straight away.
+  // Listening and speaking are tracked separately: hearing it and saying it are different skills.
+  const INTERVALS = [2, 4, 8, 16, 32, 64, 128];
+  let stats = store.get("st", {});
+  let clock = store.get("clock", 0), recent = store.get("recent", []);
+  const sk = (t, mode) => mode + ":" + t;
+  function pickTarget(cat, g) {
+    let best = 0, bs = -Infinity;
+    const block = Math.min(2, cat.items.length - 1);
+    cat.items.forEach((it, i) => {
+      const t = it[0], s = stats[sk(t, g.mode)] || { b: 0, due: 0, n: 0 }, asked = g.asked[t] || 0;
+      let sc = (clock - s.due) * 6 - s.b * 4;
+      if (!s.n) sc += 25;
+      if (g.wrong[t] && !g.fixed[t]) sc += 400;
+      sc -= asked * 200;
+      const ri = recent.indexOf(t);
+      if (ri >= 0 && ri < block) sc -= 5000;
+      sc += Math.random() * 20;
+      if (sc > bs) { bs = sc; best = i; }
+    });
+    return best;
+  }
+  function record(t, mode, firstTry) {
+    const k = sk(t, mode), s = stats[k] || (stats[k] = { b: 0, due: 0, n: 0 });
+    clock++; s.n++;
+    if (firstTry) { s.b = Math.min(s.b + 1, INTERVALS.length - 1); s.due = clock + INTERVALS[s.b]; }
+    else { s.b = 0; s.due = clock + 2; }
+    recent = [t].concat(recent.filter(x => x !== t)).slice(0, 4);
+    store.set("st", stats); store.set("clock", clock); store.set("recent", recent);
+  }
+  // how much of a topic you know (box 2+ in listening or speaking), for the little bar on each tile
+  function known(c) {
+    const ok = c.items.filter(it => ["hear", "say"].some(m => (stats[sk(it[0], m)] || {}).b >= 2)).length;
+    return Math.round(100 * ok / c.items.length);
+  }
+
+  // ---------- Screens ----------
+  let state = { view: "home" };
+  function go(view, extra) { state = Object.assign({ view }, extra || {}); render(); window.scrollTo(0, 0); }
+  function render() { ({ home: renderHome, cat: renderCat, learn: renderLearn, game: renderGame, speak: renderSpeak, win: renderWin })[state.view](); }
+  const stars = n => Array.from({ length: n.total }, (_, i) => '<img src="' + src("Star") + '" alt="" class="' + (i < n.score ? "on" : "") + '">').join("");
+  const header = c => '<div class="row"><button type="button" class="back" id="back" aria-label="Back">←</button><h2 class="ol">' + coverImg(c) + esc(c.en) + "</h2></div>";
+  const isMix = i => CATS[i].id === ALL_ID;
+
+  function renderHome() {
+    $screen.innerHTML =
+      '<button type="button" class="hello ol" id="hi">' + img("Waving hand") + "<span>Marhaba!<small>Hello! Pick a topic</small></span></button>" +
+      '<div class="grid">' + CATS.map((c, i) =>
+        '<button type="button" class="tile" data-i="' + i + '">' + coverImg(c) + '<span class="en">' + esc(c.en) + "</span>" +
+        '<span class="bar2" aria-hidden="true"><i style="width:' + known(c) + '%"></i></span></button>').join("") + "</div>";
+    document.getElementById("hi").onclick = e => { bounce(e.currentTarget); sfx("boing"); burst(null, 120, ["Waving hand", "Sparkles"], 12); say("مَرْحَبا"); };
+    $screen.querySelectorAll(".tile").forEach(t => t.onclick = () => { sfx("whoosh"); bounce(t); go("cat", { cat: +t.dataset.i }); });
+  }
+
+  function renderCat() {
+    const c = CATS[state.cat];
+    $screen.innerHTML = header(c) +
+      '<div class="modes">' +
+      (isMix(state.cat) ? "" : '<button type="button" class="mode look" id="look">' + img("Eyes") + "<b>Look</b></button>") +
+      '<button type="button" class="mode play" id="play">' + img("Speaker high volume") + "<b>Listen</b></button>" +
+      '<button type="button" class="mode speak" id="speak">' + img("Speaking head") + "<b>Say it</b></button></div>";
+    document.getElementById("back").onclick = () => go("home");
+    const look = document.getElementById("look");
+    if (look) look.onclick = () => { sfx("whoosh"); go("learn", { cat: state.cat, idx: 0 }); sayCurrent(); };
+    document.getElementById("play").onclick = () => { sfx("drum"); startGame(state.cat); };
+    document.getElementById("speak").onclick = () => { sfx("drum"); startSpeak(state.cat); };
+  }
+
+  // ----- Look: go through the phrases one by one -----
+  const sayCurrent = () => { const c = CATS[state.cat]; ready.then(() => say(c.items[state.idx][0])); };
+  function renderLearn() {
+    const c = CATS[state.cat], item = c.items[state.idx], n = c.items.length;
+    $screen.innerHTML = header(c) +
+      '<div class="learn">' +
+      '<button type="button" class="arrow" id="prev" aria-label="Previous"' + (state.idx === 0 ? " disabled" : "") + ">◀</button>" +
+      '<button type="button" class="big" id="card" aria-label="' + esc(item[1] + " – " + item[2]) + '"><span class="pic">' + picHTML(c, item) + "</span>" +
+      '<span class="tr">' + esc(item[1]) + '</span><span class="en">' + esc(item[2]) + "</span>" +
+      '<span class="hint">' + img("Speaker high volume") + "</span></button>" +
+      '<button type="button" class="arrow" id="next" aria-label="Next">' + (state.idx === n - 1 ? img("Video game") : "▶") + "</button></div>" +
+      '<div class="dots">' + c.items.map((_, i) => '<i class="' + (i === state.idx ? "on" : "") + '"></i>').join("") + "</div>";
+    document.getElementById("back").onclick = () => go("cat", { cat: state.cat });
+    const card = document.getElementById("card");
+    card.onclick = () => { bounce(card); sfx("pop"); sayCurrent(); };
+    document.getElementById("prev").onclick = () => { if (state.idx > 0) { state.idx--; render(); sayCurrent(); } };
+    document.getElementById("next").onclick = () => {
+      if (state.idx < n - 1) { state.idx++; render(); sayCurrent(); }
+      else { sfx("drum"); rain(20); startGame(state.cat); }
+    };
+  }
+
+  // ----- Listen: hear a phrase, tap its picture -----
+  function startGame(ci) {
+    state = { view: "game", mode: "hear", cat: ci, total: ROUNDS, r: 0, score: 0, extra: 0, locked: false, asked: {}, wrong: {}, fixed: {} };
+    window.scrollTo(0, 0);
+    ready.then(() => setupRound());
+  }
+  function setupRound() {
+    const c = CATS[state.cat];
+    const target = state.target = pickTarget(c, state);
+    state.firstTry = true;
+    const key = i => picKey(c.items[i]);
+    const want = state.wrong[c.items[target][0]] ? 2 : Math.min(prefs.opts, c.items.length);
+    const others = [];
+    for (const i of shuffle(c.items.map((_, i) => i))) {
+      if (others.length >= want - 1) break;
+      if (i !== target && key(i) !== key(target) && !others.some(o => key(o) === key(i))) others.push(i);
+    }
+    state.options = shuffle([target].concat(others));
+    state.locked = false;
+    render();
+    askNow();
+  }
+  function askNow() {
+    const item = CATS[state.cat].items[state.target];
+    const sp = document.getElementById("speaker"); if (sp) { sp.classList.remove("pulse"); void sp.offsetWidth; sp.classList.add("pulse"); }
+    say(item[0]);
+  }
+  function renderGame() {
+    const c = CATS[state.cat], item = c.items[state.target];
+    $screen.innerHTML = header(c) +
+      '<div class="ask"><button type="button" class="speaker" id="speaker" aria-label="Hear it again">' + img("Speaker high volume") + "</button>" +
+      '<div class="q">' + (prefs.spell ? esc(item[1]) : "") + "</div>" +
+      '<div class="progress" aria-label="Stars">' + stars(state) + "</div></div>" +
+      '<div class="opts">' +
+      state.options.map(i => '<button type="button" class="opt" data-i="' + i + '">' + picHTML(c, c.items[i]) + '<span class="en">' + esc(c.items[i][2]) + "</span></button>").join("") +
+      "</div>";
+    document.getElementById("back").onclick = () => go("cat", { cat: state.cat });
+    document.getElementById("speaker").onclick = () => askNow();
+    $screen.querySelectorAll(".opt").forEach(b => b.onclick = () => choose(b));
+  }
+  function nextOrWin(again) {
+    state.r++;
+    if (state.r >= state.total) {
+      const pending = Object.keys(state.wrong).some(w => !state.fixed[w]);
+      if (pending && state.extra < 2) { state.extra++; state.total++; return again(); }
+      addStars(state.score); go("win", { cat: state.cat, score: state.score, from: state.view });
+    } else again();
+  }
+  async function choose(btn) {
+    if (state.locked) return;
+    const c = CATS[state.cat], target = state.target, i = +btn.dataset.i, t = c.items[target][0];
+    if (i === target) {
+      state.locked = true;
+      btn.classList.add("right"); sfx("yay");
+      $screen.querySelectorAll(".opt").forEach(b => { if (b !== btn) b.classList.add("fade"); });
+      const q = $screen.querySelector(".ask .q"); if (q) q.textContent = c.items[target][1];   // show the spelling once you got it
+      record(t, "hear", state.firstTry);
+      if (state.wrong[t] && state.firstTry) state.fixed[t] = true;
+      state.asked[t] = (state.asked[t] || 0) + 1;
+      state.score = Math.min(state.score + 1, state.total);
+      const prog = $screen.querySelectorAll(".progress img"); if (prog[state.score - 1]) prog[state.score - 1].classList.add("on");
+      party(btn);
+      await say(t);
+      setTimeout(() => { if (state.view === "game") nextOrWin(setupRound); }, 600);
+    } else {
+      state.locked = true;
+      if (state.firstTry) { state.firstTry = false; state.wrong[t] = true; }
+      const round = state.r;
+      btn.classList.remove("wrong"); void btn.offsetWidth; btn.classList.add("wrong");
+      sfx("bwomp"); bounce(cat);
+      setTimeout(() => { say(t); if (state.view === "game" && state.r === round) state.locked = false; }, 700);
+    }
+  }
+
+  // ----- Say it: see the meaning, say it out loud, then hear it and judge yourself -----
+  function startSpeak(ci) {
+    state = { view: "speak", mode: "say", cat: ci, total: ROUNDS, r: 0, score: 0, extra: 0, asked: {}, wrong: {}, fixed: {} };
+    window.scrollTo(0, 0);
+    ready.then(() => setupSpeak());
+  }
+  function setupSpeak() {
+    state.target = pickTarget(CATS[state.cat], state);
+    state.revealed = false;
+    render();
+  }
+  function renderSpeak() {
+    const c = CATS[state.cat], item = c.items[state.target];
+    $screen.innerHTML = header(c) +
+      '<div class="ask"><div class="q">How do you say…</div><div class="progress" aria-label="Stars">' + stars(state) + "</div></div>" +
+      '<div class="big speak-card"><span class="pic">' + picHTML(c, item) + "</span>" +
+      '<span class="big-en">' + esc(item[2]) + "</span>" +
+      (state.revealed ? '<span class="tr">' + esc(item[1]) + "</span>" : '<span class="q2">' + img("Speaking head") + "Say it out loud first</span>") +
+      "</div>" +
+      (state.revealed
+        ? '<div class="judge"><button type="button" class="btn no" id="nope">' + img("Thumbs down") + 'Not yet</button>' +
+          '<button type="button" class="btn" id="replay" aria-label="Hear it again">' + img("Speaker high volume") + "</button>" +
+          '<button type="button" class="btn go" id="gotit">' + img("Thumbs up") + "Got it</button></div>"
+        : '<button type="button" class="btn go reveal" id="reveal">' + img("Speaker high volume") + "Check</button>");
+    document.getElementById("back").onclick = () => go("cat", { cat: state.cat });
+    const t = item[0];
+    if (!state.revealed) {
+      document.getElementById("reveal").onclick = () => { state.revealed = true; sfx("pop"); render(); say(t); };
+      return;
+    }
+    document.getElementById("replay").onclick = () => say(t);
+    const judge = ok => {
+      if (state.judged) return; state.judged = true;
+      record(t, "say", ok);
+      state.asked[t] = (state.asked[t] || 0) + 1;
+      if (ok) {
+        if (state.wrong[t]) state.fixed[t] = true;   // came back later and this time you had it
+        state.score = Math.min(state.score + 1, state.total);
+        sfx("yay"); party(document.getElementById("gotit"));
+      } else {
+        state.wrong[t] = true; sfx("bwomp"); bounce(cat);
+      }
+      setTimeout(() => { state.judged = false; if (state.view === "speak") nextOrWin(setupSpeak); }, ok ? 1100 : 600);
+    };
+    document.getElementById("gotit").onclick = () => judge(true);
+    document.getElementById("nope").onclick = () => judge(false);
+  }
+
+  function renderWin() {
+    const from = state.from;
+    $screen.innerHTML =
+      '<div class="win">' + img("Trophy", "trophy") + '<h2 class="ol">Mabrouk!<small>Congratulations!</small></h2>' +
+      '<div class="got">' + Array.from({ length: state.score }, () => img("Star")).join("") + "</div>" +
+      '<div class="actions"><button type="button" class="btn go" id="again">' + img("Counterclockwise arrows button") + 'Again</button><button type="button" class="btn" id="home">' + img("House") + "Topics</button></div></div>";
+    sfx("tada"); dance(); flash();
+    burst(null, null, null, 40); rain(50);
+    setTimeout(() => { burst(null, null, null, 40); sfx("yay"); }, 900);
+    setTimeout(() => { rain(50); sfx("pop"); }, 1600);
+    setTimeout(() => { burst(null, null, null, 40); sfx("tada"); }, 2400);
+    say("مَبْروك");
+    document.getElementById("again").onclick = () => from === "speak" ? startSpeak(state.cat) : startGame(state.cat);
+    document.getElementById("home").onclick = () => go("home");
+  }
+
+  // ---------- Settings ----------
+  function setSeg(id, val) { document.querySelectorAll("#" + id + " button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === String(val)))); }
+  function bindSeg(id, key) {
+    setSeg(id, prefs[key]);
+    document.querySelectorAll("#" + id + " button").forEach(b => b.onclick = () => {
+      prefs[key] = Number(b.dataset.v); store.set(key, prefs[key]); setSeg(id, prefs[key]);
+      if (key === "speed") say("مَرْحَبا");
+      if (key === "spell" && state.view === "game") render();
+    });
+  }
+  bindSeg("speedSeg", "speed"); bindSeg("optSeg", "opts"); bindSeg("spellSeg", "spell");
+  const sBtn = document.getElementById("setBtn"), panel = document.getElementById("panel");
+  sBtn.onclick = () => { const open = panel.hidden; panel.hidden = !open; sBtn.setAttribute("aria-pressed", String(open)); sBtn.setAttribute("aria-expanded", String(open)); };
+  document.getElementById("resetBtn").onclick = () => {
+    if (!confirm("Forget everything you've learned so far and your stars?")) return;
+    stats = {}; clock = 0; recent = []; prefs.stars = 0;
+    ["st", "clock", "recent", "stars"].forEach(k => { try { localStorage.removeItem("ya_" + k); } catch (e) {} });
+    document.getElementById("starCount").textContent = 0; go("home");
+  };
+  document.getElementById("starChip").onclick = e => { sfx("ding"); dance(); const r = e.currentTarget.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, ["Star", "Glowing star"], 16); };
+
+  document.getElementById("starCount").textContent = prefs.stars;
+  render();
+  // the coffee wobbles until the voice is loaded, then the cat pops out
+  const loader = document.getElementById("loader"), t0 = Date.now();
+  ready.then(() => new Promise(r => setTimeout(r, Math.max(0, 1300 - (Date.now() - t0))))).then(() => {
+    loader.classList.add("hatched");
+    setTimeout(() => loader.classList.add("out"), 900);
+    setTimeout(() => loader.remove(), 1500);
+  });
+})();
+</script>
